@@ -8,6 +8,6 @@ public class BusinessEntitiesProfile : Profile
 {
     public BusinessEntitiesProfile()
     {
-        CreateMap<CreateUpdateBusinessEntityDto, BusinessEntity>(MemberList.Source);
+        CreateMap<CreateUpdateBusinessEntityDto, BusinessEntity>();
     }
 }
