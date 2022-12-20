@@ -11,7 +11,7 @@ using VisualRiders.PointOfSale.Project;
 namespace VisualRiders.PointOfSale.Project.Migrations
 {
     [DbContext(typeof(PointOfSaleContext))]
-    [Migration("20221217213938_init")]
+    [Migration("20221220213249_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,6 +80,9 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.Property<int>("BusinessEntityId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("ClientLoyaltyId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -100,25 +103,25 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("BusinessEntityId");
 
+                    b.HasIndex("ClientLoyaltyId");
+
                     b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ClientLoyalty", b =>
                 {
-                    b.Property<int>("ClientId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("LoyaltyId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CardNumber")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ClientId", "LoyaltyId");
+                    b.Property<int>("LoyaltyId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("ClientId")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.HasIndex("LoyaltyId");
 
@@ -180,6 +183,33 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("DiscountItems");
+                });
+
+            modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Inventory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BusinessEntityId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastRefill")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BusinessEntityId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Inventory");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ItemSelection", b =>
@@ -689,24 +719,22 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("VisualRiders.PointOfSale.Project.Models.ClientLoyalty", "ClientLoyalty")
+                        .WithMany()
+                        .HasForeignKey("ClientLoyaltyId");
+
                     b.Navigation("BusinessEntity");
+
+                    b.Navigation("ClientLoyalty");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ClientLoyalty", b =>
                 {
-                    b.HasOne("VisualRiders.PointOfSale.Project.Models.Client", "Client")
-                        .WithOne("ClientLoyalty")
-                        .HasForeignKey("VisualRiders.PointOfSale.Project.Models.ClientLoyalty", "ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("VisualRiders.PointOfSale.Project.Models.Loyalty", "Loyalty")
                         .WithMany()
                         .HasForeignKey("LoyaltyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Client");
 
                     b.Navigation("Loyalty");
                 });
@@ -743,6 +771,25 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Inventory", b =>
+                {
+                    b.HasOne("VisualRiders.PointOfSale.Project.Models.BusinessEntity", "BusinessEntity")
+                        .WithMany()
+                        .HasForeignKey("BusinessEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VisualRiders.PointOfSale.Project.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BusinessEntity");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ItemSelectionValue", b =>
@@ -1003,11 +1050,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                         .IsRequired();
 
                     b.Navigation("BusinessEntity");
-                });
-
-            modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Client", b =>
-                {
-                    b.Navigation("ClientLoyalty");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Discount", b =>

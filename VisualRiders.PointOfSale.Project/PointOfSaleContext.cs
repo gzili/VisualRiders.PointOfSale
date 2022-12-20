@@ -19,6 +19,8 @@ public class PointOfSaleContext : DbContext
     
     public DbSet<DiscountItem> DiscountItems { get; set; }
     
+    public DbSet<Inventory> Inventory { get; set; }
+
     public DbSet<ItemSelection> ItemSelections { get; set; }
     
     public DbSet<ItemSelectionValue> ItemSelectionValues { get; set; }
@@ -51,9 +53,6 @@ public class PointOfSaleContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ClientLoyalty>()
-            .HasKey(e => new { e.ClientId, e.LoyaltyId });
-        
         modelBuilder.Entity<ReturnedItem>()
             .HasKey(e => new { e.OrderItemId, e.PaymentId });
     }

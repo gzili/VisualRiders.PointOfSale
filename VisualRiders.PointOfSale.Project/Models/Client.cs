@@ -17,5 +17,6 @@ public class Client
     
     // public string Password { get; set; }
     
+    public int? ClientLoyaltyId { get; set; }
     public ClientLoyalty? ClientLoyalty { get; set; }
 }

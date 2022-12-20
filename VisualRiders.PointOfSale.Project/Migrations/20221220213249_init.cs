@@ -40,29 +40,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Clients",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BusinessEntityId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Surname = table.Column<string>(type: "TEXT", nullable: false),
-                    PhoneNum = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Clients_BusinessEntities_BusinessEntityId",
-                        column: x => x.BusinessEntityId,
-                        principalTable: "BusinessEntities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Discounts",
                 columns: table => new
                 {
@@ -153,34 +130,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BusinessEntityId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TimeCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Tips = table.Column<decimal>(type: "TEXT", nullable: false),
-                    ClientId = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_BusinessEntities_BusinessEntityId",
-                        column: x => x.BusinessEntityId,
-                        principalTable: "BusinessEntities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Orders_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Loyalties",
                 columns: table => new
                 {
@@ -256,56 +205,17 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payments",
+                name: "ClientLoyalties",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    OrderId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LoyaltyAmount = table.Column<decimal>(type: "TEXT", nullable: false),
-                    DiscountAmount = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Delivery = table.Column<string>(type: "TEXT", nullable: false),
-                    Method = table.Column<string>(type: "TEXT", nullable: false),
-                    OrderTotal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    TaxesTotal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    AmountPaid = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Change = table.Column<decimal>(type: "TEXT", nullable: false),
-                    StaffMemberId = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payments_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Payments_StaffMembers_StaffMemberId",
-                        column: x => x.StaffMemberId,
-                        principalTable: "StaffMembers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ClientLoyalties",
-                columns: table => new
-                {
-                    ClientId = table.Column<int>(type: "INTEGER", nullable: false),
                     LoyaltyId = table.Column<int>(type: "INTEGER", nullable: false),
                     CardNumber = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientLoyalties", x => new { x.ClientId, x.LoyaltyId });
-                    table.ForeignKey(
-                        name: "FK_ClientLoyalties_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_ClientLoyalties", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ClientLoyalties_Loyalties_LoyaltyId",
                         column: x => x.LoyaltyId,
@@ -390,6 +300,63 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BusinessEntityId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Surname = table.Column<string>(type: "TEXT", nullable: false),
+                    PhoneNum = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    ClientLoyaltyId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Clients_BusinessEntities_BusinessEntityId",
+                        column: x => x.BusinessEntityId,
+                        principalTable: "BusinessEntities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Clients_ClientLoyalties_ClientLoyaltyId",
+                        column: x => x.ClientLoyaltyId,
+                        principalTable: "ClientLoyalties",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Inventory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BusinessEntityId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    LastRefill = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inventory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Inventory_BusinessEntities_BusinessEntityId",
+                        column: x => x.BusinessEntityId,
+                        principalTable: "BusinessEntities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Inventory_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductSelectors",
                 columns: table => new
                 {
@@ -451,6 +418,91 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ServiceSelectors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ServiceId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ItemSelectionId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceSelectors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ServiceSelectors_ItemSelections_ItemSelectionId",
+                        column: x => x.ItemSelectionId,
+                        principalTable: "ItemSelections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ServiceSelectors_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BusinessEntityId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TimeCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    Tips = table.Column<decimal>(type: "TEXT", nullable: false),
+                    ClientId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_BusinessEntities_BusinessEntityId",
+                        column: x => x.BusinessEntityId,
+                        principalTable: "BusinessEntities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orders_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reservations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ServiceId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ReservationStart = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    ClientId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
@@ -489,60 +541,37 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reservations",
+                name: "Payments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ServiceId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ReservationStart = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    OrderId = table.Column<int>(type: "INTEGER", nullable: false),
+                    LoyaltyAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Delivery = table.Column<string>(type: "TEXT", nullable: false),
+                    Method = table.Column<string>(type: "TEXT", nullable: false),
+                    OrderTotal = table.Column<decimal>(type: "TEXT", nullable: false),
+                    TaxesTotal = table.Column<decimal>(type: "TEXT", nullable: false),
+                    AmountPaid = table.Column<decimal>(type: "TEXT", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    ClientId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Change = table.Column<decimal>(type: "TEXT", nullable: false),
+                    StaffMemberId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.PrimaryKey("PK_Payments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservations_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
+                        name: "FK_Payments_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reservations_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServiceSelectors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ServiceId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ItemSelectionId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServiceSelectors", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ServiceSelectors_ItemSelections_ItemSelectionId",
-                        column: x => x.ItemSelectionId,
-                        principalTable: "ItemSelections",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ServiceSelectors_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Payments_StaffMembers_StaffMemberId",
+                        column: x => x.StaffMemberId,
+                        principalTable: "StaffMembers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -589,12 +618,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 column: "TaxId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientLoyalties_ClientId",
-                table: "ClientLoyalties",
-                column: "ClientId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ClientLoyalties_LoyaltyId",
                 table: "ClientLoyalties",
                 column: "LoyaltyId");
@@ -603,6 +626,11 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 name: "IX_Clients_BusinessEntityId",
                 table: "Clients",
                 column: "BusinessEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_ClientLoyaltyId",
+                table: "Clients",
+                column: "ClientLoyaltyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DiscountItems_DiscountId",
@@ -623,6 +651,16 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 name: "IX_Discounts_BusinessEntityId",
                 table: "Discounts",
                 column: "BusinessEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Inventory_BusinessEntityId",
+                table: "Inventory",
+                column: "BusinessEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Inventory_ProductId",
+                table: "Inventory",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ItemSelectionValues_ItemSelectionId",
@@ -768,10 +806,10 @@ namespace VisualRiders.PointOfSale.Project.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ClientLoyalties");
+                name: "DiscountItems");
 
             migrationBuilder.DropTable(
-                name: "DiscountItems");
+                name: "Inventory");
 
             migrationBuilder.DropTable(
                 name: "ProductSelectors");
@@ -789,16 +827,10 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 name: "Shifts");
 
             migrationBuilder.DropTable(
-                name: "Loyalties");
-
-            migrationBuilder.DropTable(
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "Payments");
-
-            migrationBuilder.DropTable(
-                name: "Discounts");
 
             migrationBuilder.DropTable(
                 name: "ItemSelectionValues");
@@ -826,6 +858,15 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
             migrationBuilder.DropTable(
                 name: "Taxes");
+
+            migrationBuilder.DropTable(
+                name: "ClientLoyalties");
+
+            migrationBuilder.DropTable(
+                name: "Loyalties");
+
+            migrationBuilder.DropTable(
+                name: "Discounts");
 
             migrationBuilder.DropTable(
                 name: "BusinessEntities");
