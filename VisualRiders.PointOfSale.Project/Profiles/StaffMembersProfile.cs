@@ -9,5 +9,6 @@ public class StaffMembersProfile : Profile
     public StaffMembersProfile()
     {
         CreateMap<CreateUpdateStaffMemberDto, StaffMember>();
+        CreateMap<StaffMember, ReadStaffMemberDto>();
     }
 }

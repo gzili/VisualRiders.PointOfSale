@@ -18,7 +18,7 @@ public class StaffMembersService
         _mapper = mapper;
     }
 
-    public StaffMember Create(CreateUpdateStaffMemberDto dto)
+    public ReadStaffMemberDto Create(CreateUpdateStaffMemberDto dto)
     {
         var staffMember = _mapper.Map<StaffMember>(dto);
         if (_businessEntitiesService.GetById(staffMember.BusinessEntityId) == null)
@@ -29,20 +29,20 @@ public class StaffMembersService
         _repository.Add(staffMember);
         _repository.SaveChanges();
 
-        return staffMember;
+        return _mapper.Map<ReadStaffMemberDto>(staffMember);
     }
 
-    public List<StaffMember> GetAll()
+    public List<ReadStaffMemberDto> GetAll()
     {
-        return _repository.GetAll();
+        return _repository.GetAll().Select(a => _mapper.Map<ReadStaffMemberDto>(a)).ToList();
     }
 
-    public StaffMember? GetById(int id)
+    public ReadStaffMemberDto? GetById(int id)
     {
-        return _repository.GetById(id);
+        return _mapper.Map<ReadStaffMemberDto>(_repository.GetById(id));
     }
 
-    public StaffMember? UpdateById(int id, CreateUpdateStaffMemberDto dto)
+    public ReadStaffMemberDto? UpdateById(int id, CreateUpdateStaffMemberDto dto)
     {
         var staffMember = _repository.GetById(id);
 
@@ -57,7 +57,7 @@ public class StaffMembersService
         
         _repository.SaveChanges();
 
-        return staffMember;
+        return _mapper.Map<ReadStaffMemberDto>(staffMember);
     }
 
     public bool RemoveById(int id)

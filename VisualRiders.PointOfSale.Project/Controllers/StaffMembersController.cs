@@ -17,13 +17,13 @@ public class StaffMembersController : ControllerBase
     }
 
     [HttpGet]
-    public List<StaffMember> GetAll()
+    public List<ReadStaffMemberDto> GetAll()
     {
         return _service.GetAll();
     }
 
     [HttpPost]
-    public ActionResult<StaffMember> Create(CreateUpdateStaffMemberDto payload)
+    public ActionResult<ReadStaffMemberDto> Create(CreateUpdateStaffMemberDto payload)
     {
         try
         {
@@ -36,7 +36,7 @@ public class StaffMembersController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public ActionResult<StaffMember> GetById(int id)
+    public ActionResult<ReadStaffMemberDto> GetById(int id)
     {
         var StaffMember = _service.GetById(id);
 
@@ -46,7 +46,7 @@ public class StaffMembersController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult<StaffMember> Update(int id, CreateUpdateStaffMemberDto payload)
+    public ActionResult<ReadStaffMemberDto> Update(int id, CreateUpdateStaffMemberDto payload)
     {
         var StaffMember = _service.UpdateById(id, payload);
 
