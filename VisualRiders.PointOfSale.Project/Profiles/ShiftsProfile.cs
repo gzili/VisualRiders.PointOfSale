@@ -4,11 +4,11 @@ using VisualRiders.PointOfSale.Project.Models;
 
 namespace VisualRiders.PointOfSale.Project.Profiles;
 
-public class StaffMembersProfile : Profile
+public class ShiftsProfile : Profile
 {
-    public StaffMembersProfile()
+    public ShiftsProfile()
     {
-        CreateMap<CreateUpdateShiftDto, Shift>();
-        CreateMap<StaffMember, ReadStaffMemberDto>();
+        CreateMap<CreateUpdateStaffMemberDto, StaffMember>();
+        CreateMap<Shift, ReadShiftDto>();
     }
 }
