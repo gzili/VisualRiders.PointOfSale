@@ -1,23 +1,27 @@
-﻿namespace VisualRiders.PointOfSale.Project.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class StaffMember
+namespace VisualRiders.PointOfSale.Project.DTOs;
+
+public class CreateUpdateStaffMemberDto
 {
-    public int Id { get; set; }
-    
+    [Required]
     public int BusinessEntityId { get; set; }
-    public BusinessEntity BusinessEntity { get; set; }
-    
+
+    [Required]
     public string Occupancy { get; set; }
-    
+
+    [Required]
     public string SocSecNum { get; set; }
-    
+
+    [Required]
     public DateTime StartedFrom { get; set; }
-    
+
+    [Required]
     public string BankAcc { get; set; }
-    
+
+    [Required]
     public string PhoneNum { get; set; }
-    
+
+    [Required]
     public string Username { get; set; }
-    
-    // public string Password { get; set; }
 }

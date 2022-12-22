@@ -13,9 +13,11 @@ builder.Services.AddDbContext<PointOfSaleContext>(
 
 // Repositories
 builder.Services.AddScoped<BusinessEntitiesRepository>();
+builder.Services.AddScoped<StaffMembersRepository>();
 
 // Services
 builder.Services.AddScoped<BusinessEntitiesService>();
+builder.Services.AddScoped<StaffMembersService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
