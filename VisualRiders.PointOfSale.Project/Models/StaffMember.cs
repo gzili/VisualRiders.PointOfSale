@@ -11,7 +11,7 @@ public class StaffMember
     
     public string SocSecNum { get; set; }
     
-    public DateTime StartedFrom { get; set; }
+    public DateOnly StartedFrom { get; set; }
     
     public string BankAcc { get; set; }
     

@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
+builder.Services.AddDateOnlyTimeOnlyStringConverters();
 builder.Services.AddDbContext<PointOfSaleContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite")));
 
@@ -21,7 +22,7 @@ builder.Services.AddScoped<StaffMembersService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => c.UseDateOnlyTimeOnlyStringConverters());
 
 var app = builder.Build();
 

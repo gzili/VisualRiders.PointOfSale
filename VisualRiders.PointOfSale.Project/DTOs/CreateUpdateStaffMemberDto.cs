@@ -14,7 +14,7 @@ public class CreateUpdateStaffMemberDto
     public string SocSecNum { get; set; }
 
     [Required]
-    public DateTime StartedFrom { get; set; }
+    public DateOnly StartedFrom { get; set; }
 
     [Required]
     public string BankAcc { get; set; }
