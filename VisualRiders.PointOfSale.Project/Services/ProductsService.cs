@@ -1,5 +1,6 @@
 using AutoMapper;
 using VisualRiders.PointOfSale.Project.DTOs;
+using VisualRiders.PointOfSale.Project.Exceptions;
 using VisualRiders.PointOfSale.Project.Models;
 using VisualRiders.PointOfSale.Project.Profiles;
 using VisualRiders.PointOfSale.Project.Repositories;
@@ -27,21 +28,22 @@ public class ProductsService
 
         product.BusinessEntityId = 1;
 
-        if (dto.TaxId is not null)
+        if (dto.TaxId != null)
         {
             var tax = _taxesRepository.GetById(dto.TaxId.Value);
-            if (tax is null)
+            
+            if (tax == null)
             {
-                throw new ArgumentException("Invalid tax id. Tax with provided id does not exist.");
+                throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
             }
 
             product.Tax = tax;
         }
 
         var category = _categoriesRepository.GetById(dto.CategoryId);
-        if (category is null)
+        if (category == null)
         {
-            throw new ArgumentException("Invalid category id. Category with provided id does not exist.");
+            throw new UnprocessableEntity($"Category with Id = {dto.CategoryId} does not exist");
         }
 
         product.Category = category;
@@ -54,7 +56,7 @@ public class ProductsService
 
     public List<ReadProductDto> GetAll()
     {
-        return _repository.GetAll().Select(category => _mapper.Map<ReadProductDto>(category)).ToList();
+        return _repository.GetAll().Select(_mapper.Map<ReadProductDto>).ToList();
     }
 
     public ReadProductDto? GetById(int id)
@@ -68,21 +70,15 @@ public class ProductsService
 
         if (product == null) return null;
 
-        product.Name = dto.Name;
-        product.TaxId = dto.TaxId;
-        product.CategoryId = dto.CategoryId;
-        product.MeasUnit = dto.MeasUnit;
-        product.Available = dto.Available;
-        product.Cost = dto.Cost;
-        product.Description = dto.Description;
-        product.Returnable = dto.Returnable;
+        _mapper.Map(dto, product);
 
-        if (dto.TaxId is not null)
+        if (dto.TaxId != null)
         {
             var tax = _taxesRepository.GetById(dto.TaxId.Value);
-            if (tax is null)
+            
+            if (tax == null)
             {
-                throw new ArgumentException("Invalid tax id. Tax with provided id does not exist.");
+                throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
             }
 
             product.Tax = tax;
@@ -91,11 +87,11 @@ public class ProductsService
         {
             product.Tax = null;
         }
-        
+
         var category = _categoriesRepository.GetById(dto.CategoryId);
-        if (category is null)
+        if (category == null)
         {
-            throw new ArgumentException("Invalid category id. Category with provided id does not exist.");
+            throw new UnprocessableEntity($"Category with Id = {dto.CategoryId} does not exist");
         }
 
         product.Category = category;
