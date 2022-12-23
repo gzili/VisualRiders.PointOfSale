@@ -8,7 +8,7 @@ public class ShiftsProfile : Profile
 {
     public ShiftsProfile()
     {
-        CreateMap<CreateUpdateStaffMemberDto, StaffMember>();
+        CreateMap<CreateUpdateShiftDto, Shift>();
         CreateMap<Shift, ReadShiftDto>();
     }
 }

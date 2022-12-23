@@ -7,64 +7,63 @@ namespace VisualRiders.PointOfSale.Project.Services;
 
 public class ShiftsService
 {
-    private readonly ShiftsRepository _repository;
-    private readonly StaffMembersService _staffMembersService;
+    private readonly ShiftsRepository _shiftsRepository;
+    private readonly StaffMembersRepository _staffMembersRepository;
     private readonly IMapper _mapper;
 
-    public ShiftsService(ShiftsRepository repository, StaffMembersService staffMembersService, IMapper mapper)
+    public ShiftsService(ShiftsRepository shiftsRepository, StaffMembersRepository staffMembersRepository, IMapper mapper)
     {
-        _repository = repository;
-        _staffMembersService = staffMembersService;
+        _shiftsRepository = shiftsRepository;
+        _staffMembersRepository = staffMembersRepository;
         _mapper = mapper;
     }
 
     public ReadShiftDto Create(CreateUpdateShiftDto dto)
     {
         var shift = _mapper.Map<Shift>(dto);
-        if (_staffMembersService.GetById(shift.StaffMemberId) == null)
+        
+        if (_staffMembersRepository.GetById(shift.StaffMemberId) == null)
         {
             throw new ArgumentException();
         }
 
-        _repository.Add(shift);
-        _repository.SaveChanges();
+        _shiftsRepository.Add(shift);
+        _shiftsRepository.SaveChanges();
 
         return _mapper.Map<ReadShiftDto>(shift);
     }
 
     public List<ReadShiftDto> GetAll()
     {
-        return _repository.GetAll().Select(a => _mapper.Map<ReadShiftDto>(a)).ToList();
+        return _shiftsRepository.GetAll().Select(_mapper.Map<ReadShiftDto>).ToList();
     }
 
     public ReadShiftDto? GetById(int id)
     {
-        return _mapper.Map<ReadShiftDto>(_repository.GetById(id));
+        return _mapper.Map<ReadShiftDto>(_shiftsRepository.GetById(id));
     }
 
     public ReadShiftDto? UpdateById(int id, CreateUpdateShiftDto dto)
     {
-        var shift = _repository.GetById(id);
+        var shift = _shiftsRepository.GetById(id);
 
         if (shift == null) return null;
 
-        shift.StartDate = dto.StartDate;
-        shift.EndDate = dto.EndDate;
-        shift.StaffMemberId = dto.StaffMemberId;
+        _mapper.Map(dto, shift);
         
-        _repository.SaveChanges();
+        _shiftsRepository.SaveChanges();
 
         return _mapper.Map<ReadShiftDto>(shift);
     }
 
     public bool RemoveById(int id)
     {
-        var shift = _repository.GetById(id);
+        var shift = _shiftsRepository.GetById(id);
 
         if (shift == null) return false;
         
-        _repository.Remove(shift);
-        _repository.SaveChanges();
+        _shiftsRepository.Remove(shift);
+        _shiftsRepository.SaveChanges();
 
         return true;
     }
