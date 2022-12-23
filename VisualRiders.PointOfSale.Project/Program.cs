@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VisualRiders.PointOfSale.Project;
+using VisualRiders.PointOfSale.Project.Filters;
 using VisualRiders.PointOfSale.Project.Repositories;
 using VisualRiders.PointOfSale.Project.Services;
 
@@ -7,10 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<HttpResponseExceptionFilter>();
+});
 builder.Services.AddDateOnlyTimeOnlyStringConverters();
-builder.Services.AddDbContext<PointOfSaleContext>(
-    options => options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite")));
+builder.Services.AddDbContext<PointOfSaleContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"));
+});
 
 // Repositories
 builder.Services.AddScoped<BusinessEntitiesRepository>();
