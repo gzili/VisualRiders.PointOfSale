@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VisualRiders.PointOfSale.Project;
+using VisualRiders.PointOfSale.Project.Models;
 using VisualRiders.PointOfSale.Project.Repositories;
 using VisualRiders.PointOfSale.Project.Services;
 
@@ -13,9 +14,12 @@ builder.Services.AddDbContext<PointOfSaleContext>(
 
 // Repositories
 builder.Services.AddScoped<BusinessEntitiesRepository>();
+builder.Services.AddScoped<ProductsRepository>();
+builder.Services.AddScoped<InventoriesRepository>();
 
 // Services
 builder.Services.AddScoped<BusinessEntitiesService>();
+builder.Services.AddScoped<InventoriesService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
