@@ -1,5 +1,6 @@
 using AutoMapper;
 using VisualRiders.PointOfSale.Project.DTOs;
+using VisualRiders.PointOfSale.Project.Exceptions;
 using VisualRiders.PointOfSale.Project.Models;
 using VisualRiders.PointOfSale.Project.Repositories;
 
@@ -28,9 +29,7 @@ public class CategoriesService
         {
             var tax = _taxesRepository.GetById(dto.TaxId.Value);
             if (tax is null)
-            {
-                throw new ArgumentException("Invalid tax id. Tax with provided id does not exist.");
-            }
+                throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
 
             category.Tax = tax;
         }
@@ -43,7 +42,7 @@ public class CategoriesService
 
     public List<ReadCategoryDto> GetAll()
     {
-        return _repository.GetAll().Select(category => _mapper.Map<ReadCategoryDto>(category)).ToList();
+        return _repository.GetAll().Select(_mapper.Map<ReadCategoryDto>).ToList();
     }
 
     public ReadCategoryDto? GetById(int id)
@@ -57,17 +56,14 @@ public class CategoriesService
 
         if (category == null) return null;
 
-        category.Name = dto.Name;
-        category.TaxId = dto.TaxId;
+        _mapper.Map(dto, category);
         
         if (dto.TaxId is not null)
         {
             var tax = _taxesRepository.GetById(dto.TaxId.Value);
             if (tax is null)
-            {
-                throw new ArgumentException("Invalid tax id. Tax with provided id does not exist.");
-            }
-
+                throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
+            
             category.Tax = tax;
         }
         else

@@ -18,16 +18,10 @@ public class CategoriesController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public ActionResult<ReadCategoryDto> Create(CreateUpdateCategoryDto payload)
     {
-        try
-        {
-            return _service.Create(payload);
-        }
-        catch (ArgumentException e)
-        {
-            return BadRequest(e.Message);
-        }
+        return _service.Create(payload);
     }
 
     [HttpGet]
@@ -52,20 +46,14 @@ public class CategoriesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public ActionResult<ReadCategoryDto> Update(int id, CreateUpdateCategoryDto payload)
     {
-        try
-        {
-            var category = _service.UpdateById(id, payload);
+        var category = _service.UpdateById(id, payload);
 
-            if (category == null) return NotFound();
+        if (category == null) return NotFound();
 
-            return category;
-        }
-        catch (ArgumentException e)
-        {
-            return BadRequest(e.Message);
-        }
+        return category;
     }
 
     [HttpDelete("{id:int}")]
