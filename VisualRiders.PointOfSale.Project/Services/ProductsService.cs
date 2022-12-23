@@ -70,7 +70,13 @@ public class ProductsService
 
         product.Name = dto.Name;
         product.TaxId = dto.TaxId;
-        
+        product.CategoryId = dto.CategoryId;
+        product.MeasUnit = dto.MeasUnit;
+        product.Available = dto.Available;
+        product.Cost = dto.Cost;
+        product.Description = dto.Description;
+        product.Returnable = dto.Returnable;
+
         if (dto.TaxId is not null)
         {
             var tax = _taxesRepository.GetById(dto.TaxId.Value);
