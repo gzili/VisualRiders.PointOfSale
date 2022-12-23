@@ -21,14 +21,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<ReadProductDto> Create(CreateUpdateProductDto payload)
     {
-        try
-        {
-            return _service.Create(payload);
-        }
-        catch (ArgumentException e)
-        {
-            return BadRequest(e.Message);
-        }
+        return _service.Create(payload);
     }
 
     [HttpGet]
@@ -55,18 +48,11 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<ReadProductDto> Update(int id, CreateUpdateProductDto payload)
     {
-        try
-        {
-            var category = _service.UpdateById(id, payload);
+        var category = _service.UpdateById(id, payload);
 
-            if (category == null) return NotFound();
+        if (category == null) return NotFound();
 
-            return category;
-        }
-        catch (ArgumentException e)
-        {
-            return BadRequest(e.Message);
-        }
+        return category;
     }
 
     [HttpDelete("{id:int}")]
