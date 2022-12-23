@@ -8,7 +8,7 @@ public class StaffMembersProfile : Profile
 {
     public StaffMembersProfile()
     {
-        CreateMap<CreateUpdateStaffMemberDto, StaffMember>();
+        CreateMap<CreateUpdateStaffMemberDto, StaffMember>(MemberList.Source);
         CreateMap<StaffMember, ReadStaffMemberDto>();
     }
 }

@@ -25,34 +25,27 @@ public class StaffMembersController : ControllerBase
     [HttpPost]
     public ActionResult<ReadStaffMemberDto> Create(CreateUpdateStaffMemberDto payload)
     {
-        try
-        {
-            return _service.Create(payload);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.StackTrace);
-        }
+        return _service.Create(payload);
     }
 
     [HttpGet("{id:int}")]
     public ActionResult<ReadStaffMemberDto> GetById(int id)
     {
-        var StaffMember = _service.GetById(id);
+        var staffMember = _service.GetById(id);
 
-        if (StaffMember == null) return NotFound();
+        if (staffMember == null) return NotFound();
 
-        return StaffMember;
+        return staffMember;
     }
 
     [HttpPut("{id:int}")]
     public ActionResult<ReadStaffMemberDto> Update(int id, CreateUpdateStaffMemberDto payload)
     {
-        var StaffMember = _service.UpdateById(id, payload);
+        var staffMember = _service.UpdateById(id, payload);
 
-        if (StaffMember == null) return NotFound();
+        if (staffMember == null) return NotFound();
 
-        return StaffMember;
+        return staffMember;
     }
 
     [HttpDelete("{id:int}")]

@@ -6,6 +6,5 @@ public class StaffMembersRepository : RepositoryBase<StaffMember>
 {
     public StaffMembersRepository(PointOfSaleContext context) : base(context)
     {
-
     }
 }

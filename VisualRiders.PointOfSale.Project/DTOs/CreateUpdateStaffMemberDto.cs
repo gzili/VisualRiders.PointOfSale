@@ -5,9 +5,6 @@ namespace VisualRiders.PointOfSale.Project.DTOs;
 public class CreateUpdateStaffMemberDto
 {
     [Required]
-    public int BusinessEntityId { get; set; }
-
-    [Required]
     public string Occupancy { get; set; }
 
     [Required]

@@ -8,12 +8,10 @@ namespace VisualRiders.PointOfSale.Project.Services;
 public class StaffMembersService
 {
     private readonly StaffMembersRepository _repository;
-    private readonly BusinessEntitiesService _businessEntitiesService;
     private readonly IMapper _mapper;
 
-    public StaffMembersService(StaffMembersRepository repository, BusinessEntitiesService businessEntitiesService, IMapper mapper)
+    public StaffMembersService(StaffMembersRepository repository, IMapper mapper)
     {
-        _businessEntitiesService = businessEntitiesService;
         _repository = repository;
         _mapper = mapper;
     }
@@ -21,11 +19,8 @@ public class StaffMembersService
     public ReadStaffMemberDto Create(CreateUpdateStaffMemberDto dto)
     {
         var staffMember = _mapper.Map<StaffMember>(dto);
-        if (_businessEntitiesService.GetById(staffMember.BusinessEntityId) == null)
-        {
-            throw new ArgumentException();
-        }
-        
+        staffMember.BusinessEntityId = 1;
+
         _repository.Add(staffMember);
         _repository.SaveChanges();
 
@@ -34,7 +29,7 @@ public class StaffMembersService
 
     public List<ReadStaffMemberDto> GetAll()
     {
-        return _repository.GetAll().Select(a => _mapper.Map<ReadStaffMemberDto>(a)).ToList();
+        return _repository.GetAll().Select(_mapper.Map<ReadStaffMemberDto>).ToList();
     }
 
     public ReadStaffMemberDto? GetById(int id)
@@ -48,12 +43,7 @@ public class StaffMembersService
 
         if (staffMember == null) return null;
 
-        staffMember.BusinessEntityId = dto.BusinessEntityId;
-        staffMember.PhoneNum = dto.PhoneNum;
-        staffMember.SocSecNum = dto.SocSecNum;
-        staffMember.Occupancy = dto.Occupancy;
-        staffMember.BankAcc = dto.BankAcc;
-        staffMember.Username = dto.Username;
+        _mapper.Map(dto, staffMember);
         
         _repository.SaveChanges();
 
