@@ -18,19 +18,19 @@ public class TaxesService
 
     public ReadTaxDto Create(CreateUpdateTaxDto dto)
     {
-        var taxesEntity = _mapper.Map<Tax>(dto);
+        var tax = _mapper.Map<Tax>(dto);
 
-        taxesEntity.BusinessEntityId = 1;
+        tax.BusinessEntityId = 1;
         
-        _repository.Add(taxesEntity);
+        _repository.Add(tax);
         _repository.SaveChanges();
 
-        return _mapper.Map<ReadTaxDto>(taxesEntity);
+        return _mapper.Map<ReadTaxDto>(tax);
     }
 
     public List<ReadTaxDto> GetAll()
     {
-        return _repository.GetAll().Select((tax) => _mapper.Map<ReadTaxDto>(tax)).ToList();
+        return _repository.GetAll().Select(_mapper.Map<ReadTaxDto>).ToList();
     }
 
     public ReadTaxDto? GetById(int id)
@@ -40,33 +40,27 @@ public class TaxesService
     
     public ReadTaxDto? UpdateById(int id, CreateUpdateTaxDto dto)
     {
-        var taxesEntity = _repository.GetById(id);
+        var tax = _repository.GetById(id);
 
-        if (taxesEntity is null)
-        {
-            return null;
-        }
+        if (tax is null) return null;
 
-        taxesEntity.Name = dto.Name;
-        taxesEntity.Description = dto.Description;
-        taxesEntity.Percentage = dto.Percentage;
-        taxesEntity.Type = dto.Type;
+        _mapper.Map(dto, tax);
 
         _repository.SaveChanges();
 
-        return _mapper.Map<ReadTaxDto>(taxesEntity);
+        return _mapper.Map<ReadTaxDto>(tax);
     }
 
     public bool RemoveById(int id)
     {
-        var taxesEntity = _repository.GetById(id);
+        var tax = _repository.GetById(id);
 
-        if (taxesEntity is null)
+        if (tax is null)
         {
             return false;
         }
         
-        _repository.Remove(taxesEntity);
+        _repository.Remove(tax);
         _repository.SaveChanges();
 
         return true;
