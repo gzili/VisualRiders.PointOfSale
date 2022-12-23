@@ -25,14 +25,7 @@ public class ShiftsController : ControllerBase
     [HttpPost]
     public ActionResult<ReadShiftDto> Create(CreateUpdateShiftDto payload)
     {
-        try
-        {
-            return _service.Create(payload);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.StackTrace);
-        }
+        return _service.Create(payload);
     }
 
     [HttpGet("{id:int}")]

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using VisualRiders.PointOfSale.Project.DTOs;
+using VisualRiders.PointOfSale.Project.Exceptions;
 using VisualRiders.PointOfSale.Project.Models;
 using VisualRiders.PointOfSale.Project.Repositories;
 
@@ -24,7 +25,7 @@ public class ShiftsService
         
         if (_staffMembersRepository.GetById(shift.StaffMemberId) == null)
         {
-            throw new ArgumentException();
+            throw new UnprocessableEntity($"Staff member with Id = {dto.StaffMemberId} does not exist");
         }
 
         _shiftsRepository.Add(shift);
