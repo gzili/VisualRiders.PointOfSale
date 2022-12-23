@@ -25,11 +25,14 @@ public class CategoriesService
 
         category.BusinessEntityId = 1;
 
-        if (dto.TaxId is not null)
+        if (dto.TaxId != null)
         {
             var tax = _taxesRepository.GetById(dto.TaxId.Value);
-            if (tax is null)
+
+            if (tax == null)
+            {
                 throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
+            }
 
             category.Tax = tax;
         }
@@ -58,12 +61,15 @@ public class CategoriesService
 
         _mapper.Map(dto, category);
         
-        if (dto.TaxId is not null)
+        if (dto.TaxId != null)
         {
             var tax = _taxesRepository.GetById(dto.TaxId.Value);
-            if (tax is null)
+
+            if (tax == null)
+            {
                 throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
-            
+            }
+
             category.Tax = tax;
         }
         else
