@@ -20,14 +20,7 @@ public class InventoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<ReadInventoryDto> Create(CreateInventoryDto payload)
     {
-        try
-        {
-            return _service.Create(payload);
-        }
-        catch (ArgumentException e)
-        {
-            return BadRequest(e.Message);
-        }
+        return _service.Create(payload);
     }
 
     [HttpGet]
@@ -54,18 +47,11 @@ public class InventoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<ReadInventoryDto> Update(int id, UpdateInventoryDto payload)
     {
-        try
-        {
-            var category = _service.UpdateById(id, payload);
+        var category = _service.UpdateById(id, payload);
 
-            if (category == null) return NotFound();
+        if (category == null) return NotFound();
 
-            return category;
-        }
-        catch (ArgumentException e)
-        {
-            return BadRequest(e.Message);
-        }
+        return category;
     }
 
     [HttpDelete("{id:int}")]

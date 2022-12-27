@@ -1,5 +1,6 @@
 using AutoMapper;
 using VisualRiders.PointOfSale.Project.DTOs;
+using VisualRiders.PointOfSale.Project.Exceptions;
 using VisualRiders.PointOfSale.Project.Models;
 using VisualRiders.PointOfSale.Project.Repositories;
 
@@ -26,14 +27,14 @@ public class InventoriesService
         inventory.LastRefill = DateTime.Now;
         
         var product = _productsRepository.GetById(dto.ProductId);
-        if (product is null)
+        if (product == null)
         {
-            throw new ArgumentException("Invalid product id. Product with provided id does not exist.");
+            throw new UnprocessableEntity($"Product with Id = {dto.ProductId} does not exist");
         }
 
-        if (_repository.GetAll().Find(inv => inv.ProductId.Equals(dto.ProductId)) is not null)
+        if (!_repository.GetAll().Any(inv => inv.ProductId.Equals(dto.ProductId)))
         {
-            throw new ArgumentException("Inventory entry with provided product id already exists");
+            throw new UnprocessableEntity($"Inventory entry with product Id = {dto.ProductId} already exists");
         }
 
         inventory.Product = product;
@@ -46,7 +47,7 @@ public class InventoriesService
 
     public List<ReadInventoryDto> GetAll()
     {
-        return _repository.GetAll().Select(category => _mapper.Map<ReadInventoryDto>(category)).ToList();
+        return _repository.GetAll().Select(_mapper.Map<ReadInventoryDto>).ToList();
     }
 
     public ReadInventoryDto? GetById(int id)
