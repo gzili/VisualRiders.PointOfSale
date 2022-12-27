@@ -20,23 +20,18 @@ builder.Services.AddDbContext<PointOfSaleContext>(options =>
 
 // Repositories
 builder.Services.AddScoped<BusinessEntitiesRepository>();
-builder.Services.AddScoped<TaxesRepository>();
-builder.Services.AddScoped<CategoriesRepository>();
-builder.Services.AddScoped<StaffMembersRepository>();
-builder.Services.AddScoped<ShiftsRepository>();
-builder.Services.AddScoped<TaxesRepository>();
-builder.Services.AddScoped<TaxesRepository>();
 builder.Services.AddScoped<CategoriesRepository>();
 builder.Services.AddScoped<ProductsRepository>();
+builder.Services.AddScoped<ShiftsRepository>();
+builder.Services.AddScoped<StaffMembersRepository>();
+builder.Services.AddScoped<TaxesRepository>();
 
 // Services
 builder.Services.AddScoped<BusinessEntitiesService>();
-builder.Services.AddScoped<TaxesService>();
-builder.Services.AddScoped<ProductsService>();
-builder.Services.AddScoped<TaxesService>();
 builder.Services.AddScoped<CategoriesService>();
-builder.Services.AddScoped<StaffMembersService>();
+builder.Services.AddScoped<ProductsService>();
 builder.Services.AddScoped<ShiftsService>();
+builder.Services.AddScoped<StaffMembersService>();
 builder.Services.AddScoped<TaxesService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -14,7 +14,11 @@ public class ProductsService
     private readonly ProductsRepository _repository;
     private readonly IMapper _mapper;
 
-    public ProductsService(ProductsRepository repository, CategoriesRepository categoriesRepository, TaxesRepository taxesRepository, IMapper mapper)
+    public ProductsService(
+        ProductsRepository repository,
+        CategoriesRepository categoriesRepository,
+        TaxesRepository taxesRepository,
+        IMapper mapper)
     {
         _repository = repository;
         _categoriesRepository = categoriesRepository;
