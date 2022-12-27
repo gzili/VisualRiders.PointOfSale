@@ -34,11 +34,11 @@ public class InventoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<ReadInventoryDto> GetById(int id)
     {
-        var category = _service.GetById(id);
+        var inventory = _service.GetById(id);
 
-        if (category == null) return NotFound();
+        if (inventory == null) return NotFound();
 
-        return category;
+        return inventory;
     }
 
     [HttpPut("{id:int}")]
@@ -47,11 +47,11 @@ public class InventoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<ReadInventoryDto> Update(int id, UpdateInventoryDto payload)
     {
-        var category = _service.UpdateById(id, payload);
+        var inventory = _service.UpdateById(id, payload);
 
-        if (category == null) return NotFound();
+        if (inventory == null) return NotFound();
 
-        return category;
+        return inventory;
     }
 
     [HttpDelete("{id:int}")]

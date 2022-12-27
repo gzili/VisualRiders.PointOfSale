@@ -71,11 +71,11 @@ public class InventoriesService
 
     public bool RemoveById(int id)
     {
-        var category = _repository.GetById(id);
+        var inventory = _repository.GetById(id);
 
-        if (category == null) return false;
+        if (inventory == null) return false;
         
-        _repository.Remove(category);
+        _repository.Remove(inventory);
         _repository.SaveChanges();
 
         return true;
