@@ -9,6 +9,7 @@ public class InventoriesProfile : Profile
     public InventoriesProfile()
     {
         CreateMap<CreateInventoryDto, Inventory>(MemberList.Source);
+        CreateMap<UpdateInventoryDto, Inventory>(MemberList.Source);
         CreateMap<Inventory, ReadInventoryDto>(MemberList.Destination);
     }
 }

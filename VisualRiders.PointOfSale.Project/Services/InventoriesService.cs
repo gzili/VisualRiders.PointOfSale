@@ -61,8 +61,9 @@ public class InventoriesService
 
         if (inventory == null) return null;
         
+        _mapper.Map(dto, inventory);
+        
         inventory.LastRefill = DateTime.Now;
-        inventory.Quantity = dto.Quantity;
 
         _repository.SaveChanges();
 

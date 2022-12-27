@@ -10,6 +10,5 @@ public class ReadInventoryDto
     
     public DateTime LastRefill { get; set; }
     
-    [Range(0, Double.PositiveInfinity)]
     public int Quantity { get; set; }
 }
