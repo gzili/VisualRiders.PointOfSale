@@ -6,6 +6,5 @@ public class ShiftsRepository : RepositoryBase<Shift>
 {
     public ShiftsRepository(PointOfSaleContext context) : base(context)
     {
-
     }
 }
