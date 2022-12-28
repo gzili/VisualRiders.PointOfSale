@@ -21,18 +21,30 @@ builder.Services.AddDbContext<PointOfSaleContext>(options =>
 // Repositories
 builder.Services.AddScoped<BusinessEntitiesRepository>();
 builder.Services.AddScoped<CategoriesRepository>();
+builder.Services.AddScoped<DiscountsRepository>();
+builder.Services.AddScoped<DiscountItemsRepository>();
+builder.Services.AddScoped<LoyaltiesRepository>();
+builder.Services.AddScoped<InventoryRepository>();
 builder.Services.AddScoped<ProductsRepository>();
+builder.Services.AddScoped<ServicesRepository>();
 builder.Services.AddScoped<ShiftsRepository>();
 builder.Services.AddScoped<StaffMembersRepository>();
 builder.Services.AddScoped<TaxesRepository>();
 
+
 // Services
 builder.Services.AddScoped<BusinessEntitiesService>();
 builder.Services.AddScoped<CategoriesService>();
+builder.Services.AddScoped<DiscountsService>();
+builder.Services.AddScoped<DiscountItemsService>();
+builder.Services.AddScoped<LoyaltiesService>();
+builder.Services.AddScoped<InventoryService>();
 builder.Services.AddScoped<ProductsService>();
+builder.Services.AddScoped<ServicesService>();
 builder.Services.AddScoped<ShiftsService>();
 builder.Services.AddScoped<StaffMembersService>();
 builder.Services.AddScoped<TaxesService>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
