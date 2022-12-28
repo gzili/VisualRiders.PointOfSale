@@ -26,15 +26,25 @@ public class DiscountItemsService
     //    return discountItem;
     //}
 
-    public List<DiscountItem> GetAll()
+    //public List<DiscountItem> GetAll()
+    //{
+    //   return  _repository.GetAll();
+    //}
+
+    //public DiscountItem? GetById(int id)
+    //{
+    //    return _repository.GetById(id);
+    //}
+
+    public List<ReadDiscountItemDto>? GetByDiscountId(int id)
     {
-       return  _repository.GetAll();
+        var items = _repository.GetItemsByDiscountId(id);
+
+        if (items == null) return null;
+
+        return items.Select(_mapper.Map<ReadDiscountItemDto>).ToList();
     }
 
-    public DiscountItem? GetById(int id)
-    {
-        return _repository.GetById(id);
-    }
     //public bool RemoveById(int id)
     //{
     //    var discountItem = _repository.GetById(id);

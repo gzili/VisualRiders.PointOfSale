@@ -49,19 +49,6 @@ public class DiscountsService
         return _repository.GetAll().Select(_mapper.Map<ReadDiscountDto>).ToList();
     }
 
-    public List<ReadDiscountItemDto>? GetAllItems(int id) 
-    {
-        var discount = _repository.GetById(id);
-
-        if(discount == null) return null;
-
-        //if (discount.DiscountItems == null) return null; always true?
-
-        List<DiscountItem> items = _discountItemsRepository.GetAll().FindAll(x => x.DiscountId == discount.Id);
-
-        return items.Select(_mapper.Map<ReadDiscountItemDto>).ToList();
-    }
-
     public ReadDiscountDto? GetById(int id)
     {
         return _mapper.Map<ReadDiscountDto>(_repository.GetById(id));
