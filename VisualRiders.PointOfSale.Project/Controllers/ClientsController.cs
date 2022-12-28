@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using VisualRiders.PointOfSale.Project.DTOs;
+using VisualRiders.PointOfSale.Project.Models;
 using VisualRiders.PointOfSale.Project.Services;
 
 namespace VisualRiders.PointOfSale.Project.Controllers;
@@ -9,10 +10,12 @@ namespace VisualRiders.PointOfSale.Project.Controllers;
 public class ClientsController : ControllerBase
 {
     private readonly ClientsService _service;
+    private readonly ClientLoyaltiesService _clientLoyaltiesService;
 
-    public ClientsController(ClientsService service)
+    public ClientsController(ClientsService service, ClientLoyaltiesService clientLoyaltySerive)
     {
         _service = service;
+        _clientLoyaltiesService = clientLoyaltySerive;
     }
 
     [HttpGet]
@@ -55,5 +58,19 @@ public class ClientsController : ControllerBase
         if (!ok) return NotFound();
 
         return NoContent();
+    }
+
+    [HttpGet("{id:int}/loyalty")]
+    public ActionResult<ClientLoyalty> GetLoyalty(int id)
+    {
+        var client = _service.GetById(id);
+
+        if (client == null) return NotFound();
+
+        var loyalty = _clientLoyaltiesService.GetById(client.ClientLoyaltyId.Value);
+
+        if (loyalty == null) return NoContent();
+
+        return loyalty;
     }
 }
