@@ -10,10 +10,12 @@ namespace VisualRiders.PointOfSale.Project.Controllers;
 public class DiscountsController : ControllerBase
 {
     private readonly DiscountsService _service;
+    private readonly DiscountItemsService _discountItemsService;
 
-    public DiscountsController(DiscountsService service)
+    public DiscountsController(DiscountsService service, DiscountItemsService discountItemsService)
     {
         _service = service;
+        _discountItemsService = discountItemsService;
     }
 
     [HttpPost]
@@ -33,12 +35,15 @@ public class DiscountsController : ControllerBase
 
     [HttpGet("{discountId:int}/items")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<List<ReadDiscountItemDto>> GetAllItems(int discountId)
+    public ActionResult<List<ReadDiscountItemDto>> GetItems(int id)
     {
-        var discountItems = _service.GetAllItems(discountId);
+        if (_service.GetById(id) == null) return NotFound();
 
-        if (discountItems == null) return NotFound();
+        var discountItems = _discountItemsService.GetByDiscountId(id);
+
+        if (discountItems == null) return NoContent();
 
         return discountItems;
     }

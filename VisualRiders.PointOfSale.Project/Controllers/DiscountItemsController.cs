@@ -29,6 +29,8 @@ public class DiscountItemsController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<DiscountItem> GetById(int id)
     {
         var discountItem = _service.GetById(id);
