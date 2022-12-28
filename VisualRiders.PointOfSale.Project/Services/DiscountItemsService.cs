@@ -26,15 +26,15 @@ public class DiscountItemsService
     //    return discountItem;
     //}
 
-    public List<DiscountItem> GetAll()
-    {
-       return  _repository.GetAll();
-    }
+    //public List<DiscountItem> GetAll()
+    //{
+    //   return  _repository.GetAll();
+    //}
 
-    public DiscountItem? GetById(int id)
-    {
-        return _repository.GetById(id);
-    }
+    //public DiscountItem? GetById(int id)
+    //{
+    //    return _repository.GetById(id);
+    //}
 
     public List<ReadDiscountItemDto>? GetByDiscountId(int id)
     {
