@@ -22,6 +22,7 @@ builder.Services.AddDbContext<PointOfSaleContext>(options =>
 builder.Services.AddScoped<BusinessEntitiesRepository>();
 builder.Services.AddScoped<CategoriesRepository>();
 builder.Services.AddScoped<ProductsRepository>();
+builder.Services.AddScoped<ServicesRepository>();
 builder.Services.AddScoped<ShiftsRepository>();
 builder.Services.AddScoped<StaffMembersRepository>();
 builder.Services.AddScoped<TaxesRepository>();
@@ -30,6 +31,7 @@ builder.Services.AddScoped<TaxesRepository>();
 builder.Services.AddScoped<BusinessEntitiesService>();
 builder.Services.AddScoped<CategoriesService>();
 builder.Services.AddScoped<ProductsService>();
+builder.Services.AddScoped<ServicesService>();
 builder.Services.AddScoped<ShiftsService>();
 builder.Services.AddScoped<StaffMembersService>();
 builder.Services.AddScoped<TaxesService>();
