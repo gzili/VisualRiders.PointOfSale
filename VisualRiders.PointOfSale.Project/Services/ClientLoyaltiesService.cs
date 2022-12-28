@@ -9,29 +9,28 @@ namespace VisualRiders.PointOfSale.Project.Services;
 public class ClientLoyaltiesService
 {
     private readonly ClientLoyaltiesRepository _repository;
-    private readonly ClientLoyaltiesRepository _loyaltyRepository;
-    //private readonly LoyaltyRepository _loyaltyRepository;
+    private readonly LoyaltiesRepository _loyaltiesRepository;
     private readonly IMapper _mapper;
 
-    public ClientLoyaltiesService(ClientLoyaltiesRepository repository, ClientLoyaltiesRepository loyaltyRepository, IMapper mapper)
+    public ClientLoyaltiesService(ClientLoyaltiesRepository repository, LoyaltiesRepository loyaltiesRepository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
-        _loyaltyRepository = loyaltyRepository;
+        _loyaltiesRepository = loyaltiesRepository;
     }
 
     public ClientLoyalty Create(CreateUpdateClientLoyaltyDto dto)
     {
         var cLoyalty = _mapper.Map<ClientLoyalty>(dto);
 
-        var loyalty = _loyaltyRepository.GetById(dto.LoyaltyId);
+        var loyalty = _loyaltiesRepository.GetById(dto.LoyaltyId);
 
         if (loyalty == null)
         {
             throw new UnprocessableEntity($"Loyalty with Id = {dto.LoyaltyId} does not exist");
         }
 
-        //cLoyalty.Loyalty = loyalty;
+        cLoyalty.Loyalty = loyalty;
 
 
         _repository.Add(cLoyalty);
@@ -58,14 +57,14 @@ public class ClientLoyaltiesService
 
         _mapper.Map(dto, cLoyalty);
 
-        var loyalty = _loyaltyRepository.GetById(dto.LoyaltyId);
+        var loyalty = _loyaltiesRepository.GetById(dto.LoyaltyId);
 
         if (loyalty == null)
         {
             throw new UnprocessableEntity($"Loyalty with Id = {dto.LoyaltyId} does not exist");
         }
 
-        //cLoyalty.Loyalty = loyalty;
+        cLoyalty.Loyalty = loyalty;
 
         _repository.SaveChanges();
 

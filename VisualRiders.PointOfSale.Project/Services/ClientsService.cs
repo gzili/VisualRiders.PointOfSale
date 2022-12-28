@@ -22,7 +22,9 @@ public class ClientsService
     public ReadClientDto Create(CreateUpdateClientDto dto)
     {
         var client = _mapper.Map<Client>(dto);
-        
+
+        client.BusinessEntityId = 1;
+
         if (client.ClientLoyaltyId.HasValue && _clientLoyaltiesRepository.GetById(client.ClientLoyaltyId.Value) == null)
         {
             throw new UnprocessableEntity($"Client Loyalty with Id = {dto.ClientLoyaltyId} does not exist");
