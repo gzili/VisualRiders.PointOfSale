@@ -27,7 +27,7 @@ namespace VisualRiders.PointOfSale.Project.Services
 
             var discount = _discountsRepository.GetById(dto.DiscountId);
 
-            if(discount == null)
+            if (discount == null)
             {
                 throw new UnprocessableEntity($"Discount with Id = {dto.DiscountId} does not exist");
             }
@@ -60,7 +60,7 @@ namespace VisualRiders.PointOfSale.Project.Services
 
             var discount = _discountsRepository.GetById(dto.DiscountId);
 
-            if(discount == null)
+            if (discount == null)
             {
                 throw new UnprocessableEntity($"Discount with Id = {dto.DiscountId} does not exist");
             }
@@ -76,7 +76,7 @@ namespace VisualRiders.PointOfSale.Project.Services
         {
             var loyalty = _repository.GetById(id);
 
-            if(loyalty == null) return false;
+            if (loyalty == null) return false;
 
             _repository.Remove(loyalty);
             _repository.SaveChanges();

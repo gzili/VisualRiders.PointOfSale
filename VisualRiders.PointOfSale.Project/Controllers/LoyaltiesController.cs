@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using VisualRiders.PointOfSale.Project.DTOs;
 using VisualRiders.PointOfSale.Project.Services;
@@ -19,6 +18,7 @@ public class LoyaltiesController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public ActionResult<ReadLoyaltyDto> Create (CreateUpdateLoyaltyDto payload)
     {
         return _service.Create(payload);
@@ -46,6 +46,7 @@ public class LoyaltiesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public ActionResult<ReadLoyaltyDto> Update(int id, CreateUpdateLoyaltyDto payload)
     {
         var loyalty = _service.UpdateById(id, payload);
