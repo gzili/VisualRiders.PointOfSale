@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using VisualRiders.PointOfSale.Project.DTOs;
-using VisualRiders.PointOfSale.Project.Models;
 using VisualRiders.PointOfSale.Project.Repositories;
 
 namespace VisualRiders.PointOfSale.Project.Services;
@@ -36,13 +35,9 @@ public class DiscountItemsService
     //    return _repository.GetById(id);
     //}
 
-    public List<ReadDiscountItemDto>? GetByDiscountId(int id)
+    public List<ReadDiscountItemDto> GetByDiscountId(int id)
     {
-        var items = _repository.GetItemsByDiscountId(id);
-
-        if (items == null) return null;
-
-        return items.Select(_mapper.Map<ReadDiscountItemDto>).ToList();
+        return _repository.GetByDiscountId(id).Select(_mapper.Map<ReadDiscountItemDto>).ToList();
     }
 
     //public bool RemoveById(int id)

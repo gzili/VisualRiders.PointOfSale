@@ -12,6 +12,4 @@ public class Discount
     public string Description { get; set; }
 
     public string Code { get; set; } = "";
-    
-    public List<DiscountItem> DiscountItems { get; set; }
 }

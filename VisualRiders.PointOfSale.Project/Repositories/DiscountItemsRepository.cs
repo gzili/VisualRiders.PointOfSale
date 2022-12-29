@@ -8,7 +8,7 @@ public class DiscountItemsRepository : RepositoryBase<DiscountItem>
     {
     }
 
-    public List<DiscountItem>? GetItemsByDiscountId(int id)
+    public List<DiscountItem> GetByDiscountId(int id)
     {
         return Items.Where(x => x.DiscountId == id).ToList(); 
     }

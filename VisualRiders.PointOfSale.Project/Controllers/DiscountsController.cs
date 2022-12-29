@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using VisualRiders.PointOfSale.Project.DTOs;
-using VisualRiders.PointOfSale.Project.Models;
 using VisualRiders.PointOfSale.Project.Services;
 
 namespace VisualRiders.PointOfSale.Project.Controllers;
@@ -21,8 +20,7 @@ public class DiscountsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public Discount Create(CreateUpdateDiscountDto payload)
+    public ReadDiscountDto Create(CreateUpdateDiscountDto payload)
     {
         return _service.Create(payload);
     }
@@ -35,19 +33,13 @@ public class DiscountsController : ControllerBase
 
     [HttpGet("{discountId:int}/items")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<List<ReadDiscountItemDto>> GetItems(int id)
+    public ActionResult<List<ReadDiscountItemDto>> GetItems(int discountId)
     {
-        if (_service.GetById(id) == null) return NotFound();
+        if (_service.GetById(discountId) == null) return NotFound();
 
-        var discountItems = _discountItemsService.GetByDiscountId(id);
-
-        if (discountItems == null) return NoContent();
-
-        return discountItems;
+        return _discountItemsService.GetByDiscountId(discountId);
     }
-
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -64,6 +56,7 @@ public class DiscountsController : ControllerBase
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public ActionResult<ReadDiscountDto> Update(int id, CreateUpdateDiscountDto payload)
     {
         var discount = _service.UpdateById(id, payload);
@@ -77,9 +70,10 @@ public class DiscountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public ActionResult<ReadDiscountItemDto> AddItem(int discountId, CreateUpdateDiscountItemDto payload)
     {
-        var discountItem = _service.AddItemById(discountId, payload);
+        var discountItem = _service.AddItem(discountId, payload);
 
         if (discountItem == null) return NotFound();
 
@@ -90,9 +84,10 @@ public class DiscountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public ActionResult<ReadDiscountItemDto> UpdateItem(int discountId, int itemId, CreateUpdateDiscountItemDto payload)
     {
-        var discountItem = _service.UpdateItemById(discountId, itemId, payload);
+        var discountItem = _service.UpdateItem(discountId, itemId, payload);
 
         if (discountItem == null) return NotFound();
 
@@ -100,9 +95,11 @@ public class DiscountsController : ControllerBase
     }
 
     [HttpDelete("{discountId:int}/items/{itemId:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult DeleteItem(int discountId, int itemId)
     {
-        var ok = _service.RemoveItemById(discountId, itemId);
+        var ok = _service.RemoveItem(discountId, itemId);
 
         if (!ok) return NotFound();
 
@@ -114,7 +111,7 @@ public class DiscountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Delete(int id)
     {
-        var ok = _service.RemoveById(id);
+        var ok = _service.Remove(id);
 
         if(!ok) return NotFound();
 

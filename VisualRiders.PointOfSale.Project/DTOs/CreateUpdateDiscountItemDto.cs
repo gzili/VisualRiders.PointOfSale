@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using VisualRiders.PointOfSale.Project.Models;
 
 namespace VisualRiders.PointOfSale.Project.DTOs;
 
