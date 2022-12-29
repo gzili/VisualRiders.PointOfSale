@@ -31,25 +31,25 @@ public class ServicesService
 
         service.BusinessEntityId = 1;
 
-        if (dto.TaxId != null)
-        {
-            var tax = _taxesRepository.GetById(dto.TaxId.Value);
-
-            if(tax == null)
-            {
-                throw new UnprocessableEntity($"Tax with id = {dto.TaxId.Value} does not exist");
-            }
-            service.Tax = tax;
-        }
-
         var category = _categoriesRepository.GetById(dto.CategoryId);
 
         if (category == null)
         {
-            throw new UnprocessableEntity($"Category with id = {dto.CategoryId} does not exist");
+            throw new UnprocessableEntity($"Category with Id = {dto.CategoryId} does not exist");
         }
 
         service.Category = category;
+        
+        if (dto.TaxId != null)
+        {
+            var tax = _taxesRepository.GetById(dto.TaxId.Value);
+
+            if (tax == null)
+            {
+                throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
+            }
+            service.Tax = tax;
+        }
 
         _repository.Add(service);
         _repository.SaveChanges();
@@ -75,11 +75,20 @@ public class ServicesService
 
         _mapper.Map(dto, service);
 
-        if(dto.TaxId != null)
+        var category = _categoriesRepository.GetById(dto.CategoryId);
+
+        if (category == null)
+        {
+            throw new UnprocessableEntity($"Category with Id = {dto.CategoryId} does not exist");
+        }
+
+        service.Category = category;
+        
+        if (dto.TaxId != null)
         {
             var tax = _taxesRepository.GetById(dto.TaxId.Value);
 
-            if(tax == null)
+            if (tax == null)
             {
                 throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
             }
@@ -90,15 +99,6 @@ public class ServicesService
         {
             service.Tax = null;
         }
-
-        var category = _categoriesRepository.GetById(dto.CategoryId);
-
-        if(category == null)
-        {
-            throw new UnprocessableEntity($"Catogory with Id = {dto.CategoryId} does not exist");
-        }
-
-        service.Category = category;
 
         _repository.SaveChanges();
 
