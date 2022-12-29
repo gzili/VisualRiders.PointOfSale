@@ -1,7 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
-using System.Diagnostics.Tracing;
 using VisualRiders.PointOfSale.Project.DTOs;
 using VisualRiders.PointOfSale.Project.Exceptions;
 using VisualRiders.PointOfSale.Project.Models;
@@ -31,17 +28,16 @@ public class DiscountsService
         _mapper = mapper;
     }
 
-    public Discount Create(CreateUpdateDiscountDto dto)
+    public ReadDiscountDto Create(CreateUpdateDiscountDto dto)
     {
         var discount = _mapper.Map<Discount>(dto);
 
         discount.BusinessEntityId = 1;
-        discount.DiscountItems = new List<DiscountItem>();
         
         _repository.Add(discount);
         _repository.SaveChanges();
 
-        return discount;
+        return _mapper.Map<ReadDiscountDto>(discount);
     }
 
     public List<ReadDiscountDto> GetAll()
@@ -67,16 +63,23 @@ public class DiscountsService
         return _mapper.Map<ReadDiscountDto>(discount);
     }
 
-    public ReadDiscountItemDto? AddItemById(int id, CreateUpdateDiscountItemDto dto)
+    public ReadDiscountItemDto? AddItem(int discountId, CreateUpdateDiscountItemDto dto)
     {
         var discountItem = _mapper.Map<DiscountItem>(dto);
 
-        var discount = _repository.GetById(id);
+        if (_repository.GetById(discountId) == null) return null;
 
-        if (discount == null) return null;
+        discountItem.DiscountId = discountId;
 
-        discountItem.Discount = discount;
-
+        if (dto.ProductId == null && dto.ServiceId == null)
+        {
+            throw new UnprocessableEntity("Either productId or serviceId must be provided");
+        }
+        
+        if (dto.ProductId != null && dto.ServiceId != null)
+        {
+            throw new UnprocessableEntity("Either productId or serviceId must be null");
+        }
 
         if (dto.ProductId != null)
         {
@@ -100,25 +103,15 @@ public class DiscountsService
             discountItem.Service = service;
         }
 
-        if(discount.DiscountItems == null)
-        {
-            discount.DiscountItems = new List<DiscountItem>();
-        }
-        discount.DiscountItems.Add(discountItem);
-
         _discountItemsRepository.Add(discountItem);
         _discountItemsRepository.SaveChanges();
-
-        _repository.SaveChanges();
-
+        
         return _mapper.Map<ReadDiscountItemDto>(discountItem);
     }
 
-    public ReadDiscountItemDto? UpdateItemById(int discountId, int itemId, CreateUpdateDiscountItemDto dto)
+    public ReadDiscountItemDto? UpdateItem(int discountId, int itemId, CreateUpdateDiscountItemDto dto)
     {
-        var discount = _repository.GetById(discountId);
-
-        if (discount == null) return null;
+        if (_repository.GetById(discountId) == null) return null;
 
         var discountItem = _discountItemsRepository.GetById(itemId);
 
@@ -139,6 +132,10 @@ public class DiscountsService
 
             discountItem.Product = product;
         }
+        else
+        {
+            discountItem.Product = null;
+        }
 
         if (dto.ServiceId != null)
         {
@@ -150,6 +147,10 @@ public class DiscountsService
 
             discountItem.Service = service;
         }
+        else
+        {
+            discountItem.Service = null;
+        }
 
         _discountItemsRepository.SaveChanges();
         _repository.SaveChanges();
@@ -158,34 +159,25 @@ public class DiscountsService
 
     }
 
-    public bool RemoveItemById(int discountId, int itemId)
+    public bool RemoveItem(int discountId, int itemId)
     {
-        var discount = _repository.GetById(discountId);
-
-        if (discount == null) return false;
+        if (_repository.GetById(discountId) == null) return false;
 
         var discountItem = _discountItemsRepository.GetById(itemId);
 
-        if(discountItem == null) return false;
+        if (discountItem == null) return false;
 
-        if(discount.DiscountItems != null)
-        {
-            discount.DiscountItems.Remove(discountItem);
-
-            _discountItemsRepository.Remove(discountItem);
-            _discountItemsRepository.SaveChanges();
-        }
-        
-        _repository.SaveChanges();
+        _discountItemsRepository.Remove(discountItem);
+        _discountItemsRepository.SaveChanges();
 
         return true;
     }
 
-    public bool RemoveById(int id)
+    public bool Remove(int id)
     {
         var discount = _repository.GetById(id);
 
-        if(discount == null) return false;
+        if (discount == null) return false;
 
         _repository.Remove(discount);
         _repository.SaveChanges();

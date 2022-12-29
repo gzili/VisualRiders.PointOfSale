@@ -10,6 +10,5 @@ public class CreateUpdateDiscountDto
     [Required]
     public string Description { get; set; }
 
-    [Required]
     public string Code { get; set; } = "";
 }
