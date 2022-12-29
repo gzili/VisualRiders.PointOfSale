@@ -8,7 +8,7 @@ public class CreateUpdateServiceDto
     public string Name { get; set; }
 
     [Required]
-    [Range(0, Double.PositiveInfinity)]
+    [Range(0, double.PositiveInfinity)]
     public decimal Cost { get; set; }
 
     [Required]
@@ -16,13 +16,10 @@ public class CreateUpdateServiceDto
 
     [Required]
     public string Description { get; set; }
-
-    //TODO: Photo
-
+    
     [Required]
     public int CategoryId { get; set; }
 
-    //TODO: why double?
     [Required]
     public double Duration { get; set; }
 
