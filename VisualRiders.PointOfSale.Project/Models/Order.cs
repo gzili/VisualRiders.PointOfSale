@@ -23,6 +23,8 @@ public class Order
     
     public decimal Tips { get; set; }
     
+    public decimal Total { get; set; }
+
     public int? ClientId { get; set; }
     public Client? Client { get; set; }
 }
