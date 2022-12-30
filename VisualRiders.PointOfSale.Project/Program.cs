@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using VisualRiders.PointOfSale.Project;
 using VisualRiders.PointOfSale.Project.Filters;
@@ -8,10 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<HttpResponseExceptionFilter>();
-});
+builder.Services
+    .AddControllers(options =>
+    {
+        options.Filters.Add<HttpResponseExceptionFilter>();
+    })
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddDateOnlyTimeOnlyStringConverters();
 builder.Services.AddDbContext<PointOfSaleContext>(options =>
 {
@@ -27,6 +33,8 @@ builder.Services.AddScoped<LoyaltiesRepository>();
 builder.Services.AddScoped<ClientLoyaltiesRepository>();
 builder.Services.AddScoped<ClientsRepository>();
 builder.Services.AddScoped<InventoryRepository>();
+builder.Services.AddScoped<OrdersRepository>();
+builder.Services.AddScoped<OrderItemsRepository>();
 builder.Services.AddScoped<ProductsRepository>();
 builder.Services.AddScoped<ServicesRepository>();
 builder.Services.AddScoped<ShiftsRepository>();
@@ -43,6 +51,7 @@ builder.Services.AddScoped<LoyaltiesService>();
 builder.Services.AddScoped<ClientLoyaltiesService>();
 builder.Services.AddScoped<ClientsService>();
 builder.Services.AddScoped<InventoryService>();
+builder.Services.AddScoped<OrdersService>();
 builder.Services.AddScoped<ProductsService>();
 builder.Services.AddScoped<ServicesService>();
 builder.Services.AddScoped<ShiftsService>();

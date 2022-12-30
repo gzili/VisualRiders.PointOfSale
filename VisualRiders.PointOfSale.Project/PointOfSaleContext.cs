@@ -53,6 +53,18 @@ public class PointOfSaleContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        var businessEntity = new BusinessEntity
+        {
+            Id = 1,
+            Name = "Test Business",
+            Description = "This is a test business.",
+            Address = "Test street 1, Test town, Test country",
+            Code = "00000"
+        };
+        
+        modelBuilder.Entity<BusinessEntity>()
+            .HasData(businessEntity);
+        
         modelBuilder.Entity<ReturnedItem>()
             .HasKey(e => new { e.OrderItemId, e.PaymentId });
     }
