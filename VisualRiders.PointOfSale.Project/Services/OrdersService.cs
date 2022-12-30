@@ -13,16 +13,44 @@ public class OrdersService
     private readonly ProductsRepository _productsRepository;
     private readonly ServicesRepository _servicesRepository;
     private readonly OrderItemsRepository _orderItemsRepository;
+    private readonly TaxesRepository _taxesRepository;
+    private readonly CategoriesRepository _categoriesRepository;
     private readonly IMapper _mapper;
 
-    public OrdersService(OrdersRepository ordersRepository, ClientsRepository clientsRepository, ProductsRepository productsRepository, ServicesRepository servicesRepository, OrderItemsRepository orderItemsRepository, IMapper mapper)
+    public OrdersService(OrdersRepository ordersRepository,
+        ClientsRepository clientsRepository,
+        ProductsRepository productsRepository,
+        ServicesRepository servicesRepository,
+        OrderItemsRepository orderItemsRepository,
+        TaxesRepository taxesRepository,
+        CategoriesRepository categoriesRepository,
+        IMapper mapper)
     {
         _ordersRepository = ordersRepository;
         _clientsRepository = clientsRepository;
         _productsRepository = productsRepository;
         _servicesRepository = servicesRepository;
         _orderItemsRepository = orderItemsRepository;
+        _taxesRepository = taxesRepository;
+        _categoriesRepository = categoriesRepository;
         _mapper = mapper;
+    }
+
+    private decimal GetProductTaxRate(Product product)
+    {
+        if (product.TaxId.HasValue)
+        {
+            return _taxesRepository.GetById(product.TaxId.Value)!.Percentage;
+        }
+
+        var category = _categoriesRepository.GetById(product.CategoryId)!;
+
+        if (category.TaxId.HasValue)
+        {
+            return _taxesRepository.GetById(category.TaxId.Value)!.Percentage;
+        }
+
+        return 0;
     }
 
     private void ProcessOrderItem(OrderItem orderItem)
@@ -31,8 +59,6 @@ public class OrdersService
         {
             throw new UnprocessableEntity("Order Item must reference either a product or a service");
         }
-
-        decimal price = 0;
 
         if (orderItem.ProductId.HasValue)
         {
@@ -43,7 +69,9 @@ public class OrdersService
                 throw new UnprocessableEntity($"Product with Id = {orderItem.ProductId} does not exist");
             }
 
-            price = product.Cost;
+            orderItem.Price = product.Cost;
+
+            orderItem.TaxRate = GetProductTaxRate(product);
         }
 
         if (orderItem.ServiceId.HasValue)
@@ -55,11 +83,19 @@ public class OrdersService
                 throw new UnprocessableEntity($"Service with Id = {orderItem.ServiceId} does not exist");
             }
 
-            price = service.Cost;
+            orderItem.Price = service.Cost;
         }
+        
+        orderItem.Subtotal = orderItem.Price * orderItem.Quantity;
+        orderItem.TaxAmount = orderItem.Subtotal * orderItem.TaxRate;
+        orderItem.Total = orderItem.Subtotal + orderItem.TaxAmount;
+    }
 
-        orderItem.Price = price;
-        orderItem.Total = orderItem.Price * orderItem.Quantity;
+    private void ProcessOrder(Order order)
+    {
+        order.Subtotal = order.Items.Sum(i => i.Subtotal);
+        order.TaxTotal = order.Items.Sum(i => i.TaxAmount);
+        order.Total = order.Items.Sum(i => i.Total);
     }
 
     public ReadOrderDto Create(CreateOrderDto dto)
@@ -80,7 +116,7 @@ public class OrdersService
             ProcessOrderItem(orderItem);
         }
 
-        order.Total = order.Items.Sum(i => i.Total);
+        ProcessOrder(order);
         
         _ordersRepository.Add(order);
         _ordersRepository.SaveChanges();
@@ -145,7 +181,7 @@ public class OrdersService
         order.Items = _orderItemsRepository.GetByOrderId(orderId);
         order.Items.Add(orderItem);
 
-        order.Total = order.Items.Sum(i => i.Total);
+        ProcessOrder(order);
         
         _ordersRepository.SaveChanges();
 
@@ -168,7 +204,7 @@ public class OrdersService
         
         ProcessOrderItem(orderItem);
 
-        order.Total = order.Items.Sum(i => i.Total);
+        ProcessOrder(order);
         
         _ordersRepository.SaveChanges();
 
@@ -190,7 +226,7 @@ public class OrdersService
             order.Items.Remove(orderItem);
         }
 
-        order.Total = order.Items.Sum(i => i.Total);
+        ProcessOrder(order);
         
         _ordersRepository.SaveChanges();
 
