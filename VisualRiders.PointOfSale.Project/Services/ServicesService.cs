@@ -48,6 +48,12 @@ public class ServicesService
             {
                 throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
             }
+            
+            if (tax.Type != TaxType.Individual)
+            {
+                throw new UnprocessableEntity($"Cannot assign tax of type `{tax.Type.ToString()}` to a service");
+            }
+            
             service.Tax = tax;
         }
 
@@ -91,6 +97,11 @@ public class ServicesService
             if (tax == null)
             {
                 throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
+            }
+            
+            if (tax.Type != TaxType.Individual)
+            {
+                throw new UnprocessableEntity($"Cannot assign tax of type `{tax.Type.ToString()}` to a service");
             }
 
             service.Tax = tax;

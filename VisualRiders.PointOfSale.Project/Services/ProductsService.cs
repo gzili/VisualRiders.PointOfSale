@@ -40,6 +40,11 @@ public class ProductsService
             {
                 throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
             }
+            
+            if (tax.Type != TaxType.Individual)
+            {
+                throw new UnprocessableEntity($"Cannot assign tax of type `{tax.Type.ToString()}` to a product");
+            }
 
             product.Tax = tax;
         }
@@ -83,6 +88,11 @@ public class ProductsService
             if (tax == null)
             {
                 throw new UnprocessableEntity($"Tax with Id = {dto.TaxId.Value} does not exist");
+            }
+            
+            if (tax.Type != TaxType.Individual)
+            {
+                throw new UnprocessableEntity($"Cannot assign tax of type `{tax.Type.ToString()}` to a product");
             }
 
             product.Tax = tax;
