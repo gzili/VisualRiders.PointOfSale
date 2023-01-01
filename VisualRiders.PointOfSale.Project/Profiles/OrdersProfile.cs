@@ -10,5 +10,6 @@ public class OrdersProfile : Profile
     {
         CreateMap<CreateOrderDto, Order>(MemberList.Source);
         CreateMap<Order, ReadOrderDto>();
+        CreateMap<Order, ReadOrderListDto>();
     }
 }
