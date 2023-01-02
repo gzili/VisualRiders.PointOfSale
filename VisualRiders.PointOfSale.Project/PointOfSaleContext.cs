@@ -56,8 +56,8 @@ public class PointOfSaleContext : DbContext
         var businessEntity = new BusinessEntity
         {
             Id = 1,
-            Name = "Test Business",
-            Description = "This is a test business.",
+            Name = "Default Business",
+            Description = "This is the default business that cannot be deleted.",
             Address = "Test street 1, Test town, Test country",
             Code = "00000"
         };
