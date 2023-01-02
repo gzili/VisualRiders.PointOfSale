@@ -67,10 +67,11 @@ public class ClientsController : ControllerBase
 
         if (client == null) return NotFound();
 
-        var loyalty = _clientLoyaltiesService.GetById(client.ClientLoyaltyId.Value);
+        if (client.ClientLoyaltyId.HasValue)
+        {
+            return _clientLoyaltiesService.GetById(client.ClientLoyaltyId.Value)!;
+        }
 
-        if (loyalty == null) return NoContent();
-
-        return loyalty;
+        return NoContent();
     }
 }
