@@ -1,4 +1,4 @@
-[Mm]igrations/
+# [Mm]igrations/
 pos.db*
 
 ## Ignore Visual Studio temporary files, build results, and
