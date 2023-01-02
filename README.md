@@ -6,7 +6,7 @@ Developed by team *Visual Riders* as part of the *Software Systems Design and Ar
 
 1. Clone this repository to your local machine.
 2. Open command-line / terminal and switch to the root directory of the cloned repository.
-3. Build the image by running `docker build -t visualriders`.
+3. Build the image by running `docker build -t visualriders .` (note the period `.` at the end).
 4. Start the application in a Docker container by running `docker run -it --rm -p 5000:80 visualriders`.
 5. The API will be available at `http://localhost:5000`.
 6. Swagger API explorer can be accessed at `http://localhost:5000/swagger` to interact with API without any additional tools.

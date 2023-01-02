@@ -10,5 +10,4 @@ RUN dotnet publish -c release -o /app --no-restore
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app ./
-COPY --from=build /src/pos.db ./
 ENTRYPOINT ["dotnet", "VisualRiders.PointOfSale.Project.dll"]
