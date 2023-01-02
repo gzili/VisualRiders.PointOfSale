@@ -11,8 +11,8 @@ using VisualRiders.PointOfSale.Project;
 namespace VisualRiders.PointOfSale.Project.Migrations
 {
     [DbContext(typeof(PointOfSaleContext))]
-    [Migration("20221220213249_init")]
-    partial class init
+    [Migration("20230102213552_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,6 +44,16 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BusinessEntities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Test street 1, Test town, Test country",
+                            Code = "00000",
+                            Description = "This is the default business that cannot be deleted.",
+                            Name = "Default Business"
+                        });
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Category", b =>
@@ -294,10 +304,19 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("TaxTotal")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("TimeCreated")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Tips")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Total")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -315,24 +334,34 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("ItemQuantity")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("ItemSelectionValueId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("OrderId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("ProductId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("ServiceId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("ItemSelectionValueId");
+                    b.Property<decimal>("TaxAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("TaxRate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
@@ -349,46 +378,24 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("AmountPaid")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Change")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Delivery")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("DiscountAmount")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("LoyaltyAmount")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Method")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("OrderId")
+                    b.Property<int>("Method")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("OrderTotal")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("StaffMemberId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("TaxesTotal")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("StaffMemberId");
 
                     b.ToTable("Payments");
                 });
@@ -753,7 +760,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.DiscountItem", b =>
                 {
                     b.HasOne("VisualRiders.PointOfSale.Project.Models.Discount", "Discount")
-                        .WithMany("DiscountItems")
+                        .WithMany()
                         .HasForeignKey("DiscountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -841,12 +848,8 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.OrderItem", b =>
                 {
-                    b.HasOne("VisualRiders.PointOfSale.Project.Models.ItemSelectionValue", "ItemSelectionValue")
-                        .WithMany()
-                        .HasForeignKey("ItemSelectionValueId");
-
                     b.HasOne("VisualRiders.PointOfSale.Project.Models.Order", "Order")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -858,8 +861,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.HasOne("VisualRiders.PointOfSale.Project.Models.Service", "Service")
                         .WithMany()
                         .HasForeignKey("ServiceId");
-
-                    b.Navigation("ItemSelectionValue");
 
                     b.Navigation("Order");
 
@@ -876,13 +877,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VisualRiders.PointOfSale.Project.Models.StaffMember", "StaffMember")
-                        .WithMany()
-                        .HasForeignKey("StaffMemberId");
-
                     b.Navigation("Order");
-
-                    b.Navigation("StaffMember");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Product", b =>
@@ -1052,11 +1047,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.Navigation("BusinessEntity");
                 });
 
-            modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Discount", b =>
-                {
-                    b.Navigation("DiscountItems");
-                });
-
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ItemSelection", b =>
                 {
                     b.Navigation("ItemSelectionValues");
@@ -1064,6 +1054,11 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.Navigation("ProductSelectors");
 
                     b.Navigation("ServiceSelectors");
+                });
+
+            modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

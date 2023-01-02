@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VisualRiders.PointOfSale.Project.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -456,6 +456,9 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     TimeCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     Tips = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Subtotal = table.Column<decimal>(type: "TEXT", nullable: false),
+                    TaxTotal = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Total = table.Column<decimal>(type: "TEXT", nullable: false),
                     ClientId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -509,19 +512,18 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     OrderId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ItemSelectionValueId = table.Column<int>(type: "INTEGER", nullable: true),
-                    ItemQuantity = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
+                    TaxRate = table.Column<decimal>(type: "TEXT", nullable: false),
+                    TaxAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Subtotal = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Total = table.Column<decimal>(type: "TEXT", nullable: false),
                     ProductId = table.Column<int>(type: "INTEGER", nullable: true),
                     ServiceId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OrderItems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_OrderItems_ItemSelectionValues_ItemSelectionValueId",
-                        column: x => x.ItemSelectionValueId,
-                        principalTable: "ItemSelectionValues",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OrderItems_Orders_OrderId",
                         column: x => x.OrderId,
@@ -547,16 +549,10 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     OrderId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LoyaltyAmount = table.Column<decimal>(type: "TEXT", nullable: false),
-                    DiscountAmount = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Delivery = table.Column<string>(type: "TEXT", nullable: false),
-                    Method = table.Column<string>(type: "TEXT", nullable: false),
-                    OrderTotal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    TaxesTotal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    AmountPaid = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Method = table.Column<int>(type: "INTEGER", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Change = table.Column<decimal>(type: "TEXT", nullable: false),
-                    StaffMemberId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Amount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Change = table.Column<decimal>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -567,11 +563,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Payments_StaffMembers_StaffMemberId",
-                        column: x => x.StaffMemberId,
-                        principalTable: "StaffMembers",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -606,6 +597,11 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "BusinessEntities",
+                columns: new[] { "Id", "Address", "Code", "Description", "Name" },
+                values: new object[] { 1, "Test street 1, Test town, Test country", "00000", "This is the default business that cannot be deleted.", "Default Business" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_BusinessEntityId",
@@ -678,11 +674,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 column: "DiscountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_ItemSelectionValueId",
-                table: "OrderItems",
-                column: "ItemSelectionValueId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
                 column: "OrderId");
@@ -711,11 +702,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 name: "IX_Payments_OrderId",
                 table: "Payments",
                 column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_StaffMemberId",
-                table: "Payments",
-                column: "StaffMemberId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_BusinessEntityId",
@@ -812,6 +798,9 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 name: "Inventory");
 
             migrationBuilder.DropTable(
+                name: "ItemSelectionValues");
+
+            migrationBuilder.DropTable(
                 name: "ProductSelectors");
 
             migrationBuilder.DropTable(
@@ -833,7 +822,10 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                 name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "ItemSelectionValues");
+                name: "ItemSelections");
+
+            migrationBuilder.DropTable(
+                name: "StaffMembers");
 
             migrationBuilder.DropTable(
                 name: "Products");
@@ -843,12 +835,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
             migrationBuilder.DropTable(
                 name: "Orders");
-
-            migrationBuilder.DropTable(
-                name: "StaffMembers");
-
-            migrationBuilder.DropTable(
-                name: "ItemSelections");
 
             migrationBuilder.DropTable(
                 name: "Categories");

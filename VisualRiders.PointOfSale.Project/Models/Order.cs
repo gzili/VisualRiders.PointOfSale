@@ -23,6 +23,15 @@ public class Order
     
     public decimal Tips { get; set; }
     
+    public decimal Subtotal { get; set; }
+    
+    public decimal TaxTotal { get; set; }
+    
+    public decimal Total { get; set; }
+
     public int? ClientId { get; set; }
     public Client? Client { get; set; }
+    
+    
+    public List<OrderItem> Items { get; set; }
 }

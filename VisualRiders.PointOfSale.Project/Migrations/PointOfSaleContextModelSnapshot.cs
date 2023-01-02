@@ -41,7 +41,17 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BusinessEntities", (string)null);
+                    b.ToTable("BusinessEntities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Test street 1, Test town, Test country",
+                            Code = "00000",
+                            Description = "This is the default business that cannot be deleted.",
+                            Name = "Default Business"
+                        });
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Category", b =>
@@ -66,7 +76,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("TaxId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Client", b =>
@@ -103,7 +113,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("ClientLoyaltyId");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ClientLoyalty", b =>
@@ -123,7 +133,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("LoyaltyId");
 
-                    b.ToTable("ClientLoyalties", (string)null);
+                    b.ToTable("ClientLoyalties");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Discount", b =>
@@ -151,7 +161,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("BusinessEntityId");
 
-                    b.ToTable("Discounts", (string)null);
+                    b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.DiscountItem", b =>
@@ -180,7 +190,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("DiscountItems", (string)null);
+                    b.ToTable("DiscountItems");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Inventory", b =>
@@ -207,7 +217,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Inventory", (string)null);
+                    b.ToTable("Inventory");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ItemSelection", b =>
@@ -225,7 +235,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ItemSelections", (string)null);
+                    b.ToTable("ItemSelections");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ItemSelectionValue", b =>
@@ -245,7 +255,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("ItemSelectionId");
 
-                    b.ToTable("ItemSelectionValues", (string)null);
+                    b.ToTable("ItemSelectionValues");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Loyalty", b =>
@@ -274,7 +284,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("DiscountId");
 
-                    b.ToTable("Loyalties", (string)null);
+                    b.ToTable("Loyalties");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Order", b =>
@@ -292,10 +302,19 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("TaxTotal")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("TimeCreated")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Tips")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Total")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -304,7 +323,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.OrderItem", b =>
@@ -313,24 +332,34 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("ItemQuantity")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("ItemSelectionValueId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("OrderId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("ProductId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("ServiceId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("ItemSelectionValueId");
+                    b.Property<decimal>("TaxAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("TaxRate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
@@ -338,7 +367,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Payment", b =>
@@ -347,48 +376,26 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("AmountPaid")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Change")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Delivery")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("DiscountAmount")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("LoyaltyAmount")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Method")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("OrderId")
+                    b.Property<int>("Method")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("OrderTotal")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("StaffMemberId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("TaxesTotal")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("StaffMemberId");
-
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Product", b =>
@@ -435,7 +442,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("TaxId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ProductSelector", b =>
@@ -468,7 +475,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductSelectors", (string)null);
+                    b.ToTable("ProductSelectors");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Reservation", b =>
@@ -495,7 +502,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Reservations", (string)null);
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ReturnedItem", b =>
@@ -522,7 +529,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("StaffMemberId");
 
-                    b.ToTable("ReturnedItems", (string)null);
+                    b.ToTable("ReturnedItems");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Service", b =>
@@ -565,7 +572,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("TaxId");
 
-                    b.ToTable("Services", (string)null);
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ServiceSelector", b =>
@@ -598,7 +605,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceSelectors", (string)null);
+                    b.ToTable("ServiceSelectors");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Shift", b =>
@@ -620,7 +627,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("StaffMemberId");
 
-                    b.ToTable("Shifts", (string)null);
+                    b.ToTable("Shifts");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.StaffMember", b =>
@@ -659,7 +666,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("BusinessEntityId");
 
-                    b.ToTable("StaffMembers", (string)null);
+                    b.ToTable("StaffMembers");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Tax", b =>
@@ -689,7 +696,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.HasIndex("BusinessEntityId");
 
-                    b.ToTable("Taxes", (string)null);
+                    b.ToTable("Taxes");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Category", b =>
@@ -751,7 +758,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.DiscountItem", b =>
                 {
                     b.HasOne("VisualRiders.PointOfSale.Project.Models.Discount", "Discount")
-                        .WithMany("DiscountItems")
+                        .WithMany()
                         .HasForeignKey("DiscountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -839,12 +846,8 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.OrderItem", b =>
                 {
-                    b.HasOne("VisualRiders.PointOfSale.Project.Models.ItemSelectionValue", "ItemSelectionValue")
-                        .WithMany()
-                        .HasForeignKey("ItemSelectionValueId");
-
                     b.HasOne("VisualRiders.PointOfSale.Project.Models.Order", "Order")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -856,8 +859,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.HasOne("VisualRiders.PointOfSale.Project.Models.Service", "Service")
                         .WithMany()
                         .HasForeignKey("ServiceId");
-
-                    b.Navigation("ItemSelectionValue");
 
                     b.Navigation("Order");
 
@@ -874,13 +875,7 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VisualRiders.PointOfSale.Project.Models.StaffMember", "StaffMember")
-                        .WithMany()
-                        .HasForeignKey("StaffMemberId");
-
                     b.Navigation("Order");
-
-                    b.Navigation("StaffMember");
                 });
 
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Product", b =>
@@ -1050,11 +1045,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.Navigation("BusinessEntity");
                 });
 
-            modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Discount", b =>
-                {
-                    b.Navigation("DiscountItems");
-                });
-
             modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.ItemSelection", b =>
                 {
                     b.Navigation("ItemSelectionValues");
@@ -1062,6 +1052,11 @@ namespace VisualRiders.PointOfSale.Project.Migrations
                     b.Navigation("ProductSelectors");
 
                     b.Navigation("ServiceSelectors");
+                });
+
+            modelBuilder.Entity("VisualRiders.PointOfSale.Project.Models.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using VisualRiders.PointOfSale.Project.DTOs;
+using VisualRiders.PointOfSale.Project.Exceptions;
 using VisualRiders.PointOfSale.Project.Models;
 using VisualRiders.PointOfSale.Project.Repositories;
 
@@ -54,6 +55,11 @@ public class BusinessEntitiesService
 
     public bool RemoveById(int id)
     {
+        if (id == 1)
+        {
+            throw new UnprocessableEntity("This is the default business entity and cannot be deleted.");
+        }
+        
         var businessEntity = _repository.GetById(id);
 
         if (businessEntity == null) return false;

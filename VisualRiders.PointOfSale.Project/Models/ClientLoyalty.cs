@@ -7,6 +7,7 @@ public class ClientLoyalty
     public int Id { get; set; }
     
     public int LoyaltyId { get; set; }
+    
     [JsonIgnore]
     public Loyalty Loyalty { get; set; }
 
