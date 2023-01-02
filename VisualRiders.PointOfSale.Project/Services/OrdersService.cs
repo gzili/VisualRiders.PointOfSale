@@ -174,6 +174,11 @@ public class OrdersService
 
         if (order == null) return null;
 
+        if (order.Status != OrderStatus.Created)
+        {
+            throw new UnprocessableEntity("Order can only be modified when it is in the `Created` status");
+        }
+
         var orderItem = _mapper.Map<OrderItem>(dto);
         
         ProcessOrderItem(orderItem);
@@ -193,6 +198,11 @@ public class OrdersService
         var order = _ordersRepository.GetById(orderId);
 
         if (order == null) return null;
+        
+        if (order.Status != OrderStatus.Created)
+        {
+            throw new UnprocessableEntity("Order can only be modified when it is in the `Created` status");
+        }
 
         order.Items = _orderItemsRepository.GetByOrderId(orderId);
 
@@ -216,6 +226,11 @@ public class OrdersService
         var order = _ordersRepository.GetById(orderId);
 
         if (order == null) return null;
+        
+        if (order.Status != OrderStatus.Created)
+        {
+            throw new UnprocessableEntity("Order can only be modified when it is in the `Created` status");
+        }
 
         order.Items = _orderItemsRepository.GetByOrderId(orderId);
 
