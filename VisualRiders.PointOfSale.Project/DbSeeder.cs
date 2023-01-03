@@ -106,6 +106,25 @@ public static class DbSeeder
 
         context.Add(service1);
 
+        var sampleDiscount = new Discount
+        {
+            BusinessEntity = defaultBusiness,
+            Name = "Sample discount",
+            Description = "This is a sample discount that is applied to Product 2 by default.",
+            Code = "SAMPLE"
+        };
+
+        context.Add(sampleDiscount);
+
+        var sampleDiscountItem = new DiscountItem
+        {
+            Discount = sampleDiscount,
+            Product = product2,
+            DiscountSize = 0.1m
+        };
+
+        context.Add(sampleDiscountItem);
+
         context.SaveChanges();
     }
 }

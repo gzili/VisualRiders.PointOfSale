@@ -8,7 +8,11 @@ public class ReadOrderItemDto
     
     public decimal Price { get; set; }
     
+    public decimal DiscountRate { get; set; }
+    
     public decimal TaxRate { get; set; }
+    
+    public decimal DiscountTotal { get; set; }
     
     public decimal TaxAmount { get; set; }
     

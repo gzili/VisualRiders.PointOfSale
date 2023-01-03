@@ -84,7 +84,7 @@ public class OrdersController : ControllerBase
         return order;
     }
     
-    [HttpPost("{orderId:int}/items/{itemId:int}")]
+    [HttpPut("{orderId:int}/items/{itemId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -104,6 +104,20 @@ public class OrdersController : ControllerBase
     public ActionResult<ReadOrderDto> RemoveItem(int orderId, int itemId)
     {
         var order = _ordersService.DeleteItem(orderId, itemId);
+
+        if (order == null) return NotFound();
+
+        return order;
+    }
+
+    [HttpPost("{orderId:int}/applyDiscountCode")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public ActionResult<ReadOrderDto> ApplyDiscountCode(int orderId, DiscountCodeDto payload)
+    {
+        var order = _ordersService.ApplyDiscountCode(orderId, payload);
 
         if (order == null) return NotFound();
 

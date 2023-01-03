@@ -12,4 +12,9 @@ public class DiscountItemsRepository : RepositoryBase<DiscountItem>
     {
         return Items.Where(x => x.DiscountId == id).ToList(); 
     }
+
+    public DiscountItem? GetByDiscountIdAndProductId(int discountId, int productId)
+    {
+        return Items.FirstOrDefault(i => i.DiscountId == discountId && i.ProductId == productId);
+    }
 }
