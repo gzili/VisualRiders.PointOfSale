@@ -58,6 +58,23 @@ public class OrdersService
 
         return 0;
     }
+
+    private decimal GetServiceTaxRate(Service service)
+    {
+        if (service.TaxId.HasValue)
+        {
+            return _taxesRepository.GetById(service.TaxId.Value)!.Percentage;
+        }
+
+        var category = _categoriesRepository.GetById(service.CategoryId)!;
+
+        if (category.TaxId.HasValue)
+        {
+            return _taxesRepository.GetById(category.TaxId.Value)!.Percentage;
+        }
+
+        return 0;
+    }
     
     private void UpdateOrderItemTotals(OrderItem orderItem)
     {
@@ -98,6 +115,8 @@ public class OrdersService
             }
 
             orderItem.Price = service.Cost;
+
+            orderItem.TaxRate = GetServiceTaxRate(service);
         }
         
         UpdateOrderItemTotals(orderItem);
