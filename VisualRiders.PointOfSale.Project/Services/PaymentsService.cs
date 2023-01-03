@@ -62,4 +62,17 @@ public class PaymentsService
 
         return payments.Select(_mapper.Map<ReadPaymentDto>).ToList();
     }
+
+    public ReadPaymentDto? UpdateStatus(int paymentId, UpdatePaymentStatusDto dto)
+    {
+        var payment = _paymentsRepository.GetById(paymentId);
+
+        if (payment == null) return null;
+
+        payment.Status = dto.Status;
+        
+        _paymentsRepository.SaveChanges();
+
+        return _mapper.Map<ReadPaymentDto>(payment);
+    }
 }
