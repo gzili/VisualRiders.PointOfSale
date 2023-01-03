@@ -30,4 +30,17 @@ public class PaymentsController : ControllerBase
     {
         return _paymentsService.GetAll(orderId);
     }
+
+    [HttpPut("{id:int}/status")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public ActionResult<ReadPaymentDto> UpdateStatus(int id, UpdatePaymentStatusDto payload)
+    {
+        var payment = _paymentsService.UpdateStatus(id, payload);
+
+        if (payment == null) return NotFound();
+
+        return payment;
+    }
 }
