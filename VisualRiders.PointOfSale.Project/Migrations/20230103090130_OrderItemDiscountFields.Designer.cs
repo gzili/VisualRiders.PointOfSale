@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VisualRiders.PointOfSale.Project;
 
@@ -10,9 +11,10 @@ using VisualRiders.PointOfSale.Project;
 namespace VisualRiders.PointOfSale.Project.Migrations
 {
     [DbContext(typeof(PointOfSaleContext))]
-    partial class PointOfSaleContextModelSnapshot : ModelSnapshot
+    [Migration("20230103090130_OrderItemDiscountFields")]
+    partial class OrderItemDiscountFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.12");
@@ -288,9 +290,6 @@ namespace VisualRiders.PointOfSale.Project.Migrations
 
                     b.Property<int?>("ClientId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("DiscountTotal")
-                        .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");

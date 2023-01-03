@@ -15,6 +15,8 @@ public class OrdersService
     private readonly OrderItemsRepository _orderItemsRepository;
     private readonly TaxesRepository _taxesRepository;
     private readonly CategoriesRepository _categoriesRepository;
+    private readonly DiscountsRepository _discountsRepository;
+    private readonly DiscountItemsRepository _discountItemsRepository;
     private readonly IMapper _mapper;
 
     public OrdersService(OrdersRepository ordersRepository,
@@ -24,6 +26,8 @@ public class OrdersService
         OrderItemsRepository orderItemsRepository,
         TaxesRepository taxesRepository,
         CategoriesRepository categoriesRepository,
+        DiscountsRepository discountsRepository,
+        DiscountItemsRepository discountItemsRepository,
         IMapper mapper)
     {
         _ordersRepository = ordersRepository;
@@ -33,6 +37,8 @@ public class OrdersService
         _orderItemsRepository = orderItemsRepository;
         _taxesRepository = taxesRepository;
         _categoriesRepository = categoriesRepository;
+        _discountsRepository = discountsRepository;
+        _discountItemsRepository = discountItemsRepository;
         _mapper = mapper;
     }
 
@@ -51,6 +57,31 @@ public class OrdersService
         }
 
         return 0;
+    }
+
+    private decimal GetServiceTaxRate(Service service)
+    {
+        if (service.TaxId.HasValue)
+        {
+            return _taxesRepository.GetById(service.TaxId.Value)!.Percentage;
+        }
+
+        var category = _categoriesRepository.GetById(service.CategoryId)!;
+
+        if (category.TaxId.HasValue)
+        {
+            return _taxesRepository.GetById(category.TaxId.Value)!.Percentage;
+        }
+
+        return 0;
+    }
+    
+    private void UpdateOrderItemTotals(OrderItem orderItem)
+    {
+        orderItem.Subtotal = orderItem.Price * orderItem.Quantity;
+        orderItem.DiscountTotal = orderItem.Subtotal * orderItem.DiscountRate;
+        orderItem.TaxAmount = (orderItem.Subtotal - orderItem.DiscountTotal) * orderItem.TaxRate;
+        orderItem.Total = orderItem.Subtotal + orderItem.TaxAmount - orderItem.DiscountTotal;
     }
 
     private void ProcessOrderItem(OrderItem orderItem)
@@ -84,16 +115,17 @@ public class OrdersService
             }
 
             orderItem.Price = service.Cost;
+
+            orderItem.TaxRate = GetServiceTaxRate(service);
         }
         
-        orderItem.Subtotal = orderItem.Price * orderItem.Quantity;
-        orderItem.TaxAmount = orderItem.Subtotal * orderItem.TaxRate;
-        orderItem.Total = orderItem.Subtotal + orderItem.TaxAmount;
+        UpdateOrderItemTotals(orderItem);
     }
 
-    private void ProcessOrder(Order order)
+    private void UpdateOrderTotals(Order order)
     {
         order.Subtotal = order.Items.Sum(i => i.Subtotal);
+        order.DiscountTotal = order.Items.Sum(i => i.DiscountTotal);
         order.TaxTotal = order.Items.Sum(i => i.TaxAmount);
         order.Total = order.Items.Sum(i => i.Total);
     }
@@ -116,7 +148,7 @@ public class OrdersService
             ProcessOrderItem(orderItem);
         }
 
-        ProcessOrder(order);
+        UpdateOrderTotals(order);
         
         _ordersRepository.Add(order);
         _ordersRepository.SaveChanges();
@@ -186,7 +218,7 @@ public class OrdersService
         order.Items = _orderItemsRepository.GetByOrderId(orderId);
         order.Items.Add(orderItem);
 
-        ProcessOrder(order);
+        UpdateOrderTotals(order);
         
         _ordersRepository.SaveChanges();
 
@@ -214,7 +246,7 @@ public class OrdersService
         
         ProcessOrderItem(orderItem);
 
-        ProcessOrder(order);
+        UpdateOrderTotals(order);
         
         _ordersRepository.SaveChanges();
 
@@ -241,7 +273,44 @@ public class OrdersService
             order.Items.Remove(orderItem);
         }
 
-        ProcessOrder(order);
+        UpdateOrderTotals(order);
+        
+        _ordersRepository.SaveChanges();
+
+        return _mapper.Map<ReadOrderDto>(order);
+    }
+
+    public ReadOrderDto? ApplyDiscountCode(int orderId, DiscountCodeDto dto)
+    {
+        var order = _ordersRepository.GetById(orderId);
+
+        if (order == null) return null;
+        
+        var discount = _discountsRepository.GetByCode(dto.Code);
+
+        if (discount == null)
+        {
+            throw new UnprocessableEntity("Invalid discount code");
+        }
+
+        order.Items = _orderItemsRepository.GetByOrderId(orderId);
+
+        foreach (var orderItem in order.Items)
+        {
+            if (orderItem.ProductId.HasValue)
+            {
+                var discountItem = _discountItemsRepository.GetByDiscountIdAndProductId(discount.Id, orderItem.ProductId.Value);
+
+                if (discountItem != null && discountItem.DiscountSize > orderItem.DiscountRate)
+                {
+                    orderItem.DiscountRate = discountItem.DiscountSize;
+                    
+                    UpdateOrderItemTotals(orderItem);
+                }
+            }
+        }
+        
+        UpdateOrderTotals(order);
         
         _ordersRepository.SaveChanges();
 

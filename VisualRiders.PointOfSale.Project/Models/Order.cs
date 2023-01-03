@@ -25,6 +25,8 @@ public class Order
     
     public decimal Subtotal { get; set; }
     
+    public decimal DiscountTotal { get; set; }
+    
     public decimal TaxTotal { get; set; }
     
     public decimal Total { get; set; }
